@@ -5,6 +5,7 @@ import { userRoutes } from "./userRoutes";
 import { adminRoutes } from "./adminRoutes";
 import NotFound from "../pages/user/NotFound.jsx";
 
+
 export default function RoutesIndex() {
   return (
     <Routes>

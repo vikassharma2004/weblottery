@@ -4,6 +4,7 @@ import { User, Mail, Lock, Gift, Eye, EyeOff, Loader2, ArrowRight } from "lucide
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useRegister } from "../../hooks/auth/AuthMutation";
+import FloatingSupportButton from "../../components/FloatingSupportButton";
 const Register = () => {
     const register = useRegister();
   const [searchParams] = useSearchParams();
@@ -284,6 +285,7 @@ const Register = () => {
       >
         🎁 Invite friends & earn <span style={{ color: COLORS.PRIMARY }}>₹50</span> when they join!
       </div>
+       <FloatingSupportButton/>
     </div>
   );
 };

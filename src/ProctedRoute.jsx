@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
 
   // Not logged in
   if (!isAuth) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Role not allowed

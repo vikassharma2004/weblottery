@@ -3,6 +3,7 @@ import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useSendResetToken } from "../../hooks/auth/AuthMutation";
+import FloatingSupportButton from "../../components/FloatingSupportButton";
 const ForgotPassword = () => {
   const { mutate: sendResetToken, isPending } = useSendResetToken();
   const [email, setEmail] = useState("");
@@ -126,6 +127,7 @@ const ForgotPassword = () => {
         💡 Tip: Check your <strong>Spam</strong> or <strong>Promotions</strong>{" "}
         folder if you don’t see the email.
       </div>
+      <FloatingSupportButton/>
     </div>
   );
 };

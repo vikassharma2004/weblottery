@@ -99,13 +99,13 @@ export const getWalletInfo = async () => {
   return res.data;
 };
 export const getPaymentHistory = async ({ page = 1, status = "all" }) => {
-  let url = `/payment/History?page=${page}&limit=10`;
+  let url = `/payment/history?page=${page}&limit=10`;
 
   if (status !== "all") {
     url += `&status=${status}`;
   }
 
-  const { data } = await axiosClient.get(url);
+  const { data } = await axios.get(url);
   return data;
 };
 export const createWithdrawRequest = async ({ amount, upiId }) => {

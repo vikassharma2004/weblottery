@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -16,7 +16,9 @@ import {
   getReferralSummary,
   getWalletInfo,
   getPaymentHistory,
-  createWithdrawRequest
+  createWithdrawRequest,
+  getProfile,
+  getNotifications
 } from "../../api/AuthApi";
 
 import { useUserStore } from "../../store/AuthStrore";
@@ -40,7 +42,7 @@ export const useWalletInfo = () => {
   });
 };
 export const useRegister = () => {
-  const setUser = useUserStore((s) => s.setUser);
+
 
   return useMutation({
     mutationFn: registerUser,
@@ -235,24 +237,22 @@ export const useReportIssue = () => {
 export const usePaymentHistory = (status) => {
   return useInfiniteQuery({
     queryKey: ["payment-history", status],
-    queryFn: ({ pageParam = 1 }) => 
-      getPaymentHistory({ pageParam, status }),
+
+    queryFn: ({ pageParam }) =>
+      getPaymentHistory({ page: pageParam, status }),
+
+    initialPageParam: 1,
 
     getNextPageParam: (lastPage) => {
-      const { hasNextPage, page } = lastPage.pagination;
-      return hasNextPage ? page + 1 : undefined;
+      if (!lastPage?.pagination?.hasNextPage) return undefined;
+      return lastPage.pagination.page + 1;
     },
   });
 };
 
 // 🔥 Mark Notifications as Read
-export const useMarkNotificationsRead = () => {
-  return useMutation({
-    mutationFn: markAllAsRead,
-    onSuccess: () => toast.success("Notifications marked as read"),
-    onError: () => toast.error("Failed to update notifications"),
-  });
-};
+
+
 
 export const useWithdraw = () => {
   return useMutation({
@@ -264,4 +264,38 @@ export const useWithdraw = () => {
       toast.error(err?.response?.data?.message || "Withdrawal failed");
     },
   });
+};
+export const useProfile = () => {
+  return useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfile,
+    staleTime: 5 * 60 * 1000, // 5 min cache (optional)
+     retry: 1,
+  });
+};
+export const useNotifications = (enabled = true) => {
+
+  const notificationsQuery = useQuery({
+    queryKey: ["notifications"],
+    queryFn: getNotifications,
+    enabled,
+    staleTime: 1000 * 60 * 2,
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn:markAllAsRead,
+    onSuccess: () => {
+      // instantly update UI without refetching
+      notificationsQuery.refetch();
+    },
+  });
+
+  const unreadCount =
+    notificationsQuery.data?.notifications?.filter((n) => !n.read).length || 0;
+
+  return {
+    notificationsQuery,
+    markReadMutation,
+    unreadCount,
+  };
 };

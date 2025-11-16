@@ -4,6 +4,7 @@ import { COLORS } from "../../constant";
 import { ArrowRight } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useGenerateOtp,useVerifyOtp } from "../../hooks/auth/AuthMutation";
+import FloatingSupportButton from "../../components/FloatingSupportButton";
 const VerifyOtp = () => {
   const OTP_LENGTH = 6;
 const { mutateAsync: generateOtp, isPending: isGeneratingOtp } = useGenerateOtp();
@@ -188,8 +189,8 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
           </button>
         )}
       </div>
+      <FloatingSupportButton/>
     </div>
   );
 };
-
 export default VerifyOtp;

@@ -221,7 +221,7 @@ const ChangePassword = () => {
           color: COLORS.SECONDARY,
         }}
       >
-        💡 Use a strong password with at least 8 characters, including numbers &
+        💡 Use a strong password with at least 6 characters, including numbers &
         symbols.
       </div>
     </div>

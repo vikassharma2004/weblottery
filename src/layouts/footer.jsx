@@ -29,10 +29,10 @@ export function Footer() {
 
               <li>
                 <a
-                  href="/privacy"
+                  href="/faq"
                   className="hover:text-white transition cursor-pointer"
                 >
-                  Privacy Policy
+                  FAQs
                 </a>
               </li>
 

@@ -1,17 +1,22 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Gift, Wallet, User, Menu, X, LogOut } from "lucide-react";
+import { Home, Gift, Wallet, User, Menu, X, LogOut, Bell } from "lucide-react";
 import { COLORS } from "../../constant";
 import { useState } from "react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.webp";
 import { useUserStore } from "../../store/AuthStrore";
 import { logoutUser } from "../../api/AuthApi";
 import { Toaster } from "react-hot-toast";
+import NotificationDropdown from "../NotificationDropdown";
+import { useNotifications } from "../../hooks/auth/AuthMutation";
 
 export default function UserNavbar() {
   const navigate = useNavigate();
   const { clearAuth, user } = useUserStore();
+  const { unreadCount } = useNotifications(true);
+  console.log(unreadCount)
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const isLoggedIn = Boolean(user);
 
@@ -43,7 +48,11 @@ export default function UserNavbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-10">
-          <DesktopLink to="/" icon={<Home className="w-4 h-4" />} label="Home" />
+          <DesktopLink
+            to="/"
+            icon={<Home className="w-4 h-4" />}
+            label="Home"
+          />
 
           {isLoggedIn && (
             <>
@@ -71,6 +80,32 @@ export default function UserNavbar() {
               <Menu className="w-7 h-7 text-gray-800" />
             )}
           </button>
+
+         {user && (
+  <div className="relative flex items-center gap-2 group">
+    <button
+      onClick={() => setOpen((p) => !p)}
+      className="relative flex items-center gap-2"
+    >
+      <Bell className="w-6 h-6 text-gray-800" />
+
+     
+
+      {/* Unread Badge */}
+      {unreadCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+          {unreadCount}
+        </span>
+      )}
+    </button>
+
+    {open && (
+      <div className="absolute right-0 mt-2">
+        <NotificationDropdown onClose={() => setOpen(false)} />
+      </div>
+    )}
+  </div>
+)}
 
           {/* Desktop Avatar / Login */}
           <div className="hidden md:block">
@@ -133,7 +168,6 @@ export default function UserNavbar() {
             style={{ borderTop: `2px solid ${COLORS.PRIMARY}` }}
           >
             <div className="flex flex-col gap-2 p-6">
-
               {/* SHOW ONLY IF LOGGED IN */}
               {isLoggedIn ? (
                 <>

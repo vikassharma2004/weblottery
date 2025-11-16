@@ -52,7 +52,7 @@ export default function PaymentHistoryPage() {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case "success":
+      case "completed":
         return <CheckCircle className="w-5 h-5 text-emerald-600" />;
       case "pending":
         return <Clock className="w-5 h-5 text-amber-600" />;
@@ -76,16 +76,15 @@ export default function PaymentHistoryPage() {
   return (
     <div className="min-h-screen bg-linear-to-br from-stone-50 to-stone-100 pb-20">
       <div className="max-w-6xl mx-auto px-0 sm:px-6 py-10">
-
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-stone-900">
             Payment History
           </h1>
 
           {/* Filters */}
           <div className="flex gap-2 mt-4 sm:mt-0 overflow-x-auto no-scrollbar">
-            {["all", "success", "pending", "failed"].map((s) => (
+            {["all", "completed", "pending", "failed", "cancelled"].map((s) => (
               <button
                 key={s}
                 onClick={() => updateFilter(s)}
@@ -111,7 +110,7 @@ export default function PaymentHistoryPage() {
               {/* TOP */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  {p.type === "credit" ? (
+                  {p.type === "withdrawal" ? (
                     <ArrowDownCircle className="w-7 h-7 text-emerald-600" />
                   ) : (
                     <ArrowUpCircle className="w-7 h-7 text-red-500" />
@@ -119,7 +118,9 @@ export default function PaymentHistoryPage() {
 
                   <div>
                     <p className="font-semibold text-stone-900 text-sm sm:text-base">
-                      {p._id}
+                      {p.type === "withdrawal"
+                        ? `Withdrawal (${p.withdrawId})`
+                        : "Deposit"}
                     </p>
                     <p className="text-xs text-stone-500">
                       {new Date(p.createdAt).toLocaleString()}
@@ -131,7 +132,7 @@ export default function PaymentHistoryPage() {
                   {getStatusIcon(p.status)}
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      p.status === "success"
+                      p.status === "completed"
                         ? "bg-emerald-100 text-emerald-700"
                         : p.status === "pending"
                         ? "bg-amber-100 text-amber-700"
@@ -143,7 +144,7 @@ export default function PaymentHistoryPage() {
                 </div>
               </div>
 
-              <div className="h-[1px] bg-stone-200 my-4"></div>
+              <div className="h-px bg-stone-200 my-4"></div>
 
               {/* DETAILS */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
@@ -151,29 +152,28 @@ export default function PaymentHistoryPage() {
                   <p className="text-stone-500 text-xs">Amount</p>
                   <p
                     className={`font-bold ${
-                      p.type === "credit"
-                        ? "text-emerald-600"
-                        : "text-red-500"
+                      p.type === "withdrawal"
+                        ? "text-red-500"
+                        : "text-emerald-600"
                     }`}
                   >
-                    {p.type === "credit" ? "+ " : "- "}
-                    ₹{p.amount}
+                    {p.type === "withdrawal" ? "- " : "+ "}₹{p.amount}
                   </p>
                 </div>
 
                 <div>
                   <p className="text-stone-500 text-xs">Before</p>
-                  <p className="font-semibold">₹{p.beforeBalance}</p>
+                  <p className="font-semibold">₹{p.balanceBefore}</p>
                 </div>
 
                 <div>
                   <p className="text-stone-500 text-xs">After</p>
-                  <p className="font-semibold">₹{p.afterBalance}</p>
+                  <p className="font-semibold">₹{p.balanceAfter}</p>
                 </div>
 
                 <div>
                   <p className="text-stone-500 text-xs">Method</p>
-                  <p className="font-semibold">{p.method}</p>
+                  <p className="font-semibold">{p.method.toUpperCase()}</p>
                 </div>
               </div>
             </div>

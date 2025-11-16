@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useLogin } from "../../hooks/auth/AuthMutation";
+import FloatingSupportButton from "../../components/FloatingSupportButton";
 
 const Login = () => {
   const{ isPending,mutateAsync:login} = useLogin();
@@ -199,6 +200,7 @@ if(formData.email==="" || formData.password===""){
         🎁 Earn <span style={{ color: COLORS.PRIMARY }}>₹50</span> bonus for
         every friend you refer!
       </div>
+      <FloatingSupportButton/>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Wallet, ArrowDownCircle, ArrowUpCircle, Info } from "lucide-react";
+import { Wallet, ArrowDownCircle, ArrowUpCircle, Info ,Loader2} from "lucide-react";
 import { useWalletInfo, useWithdraw } from "../../hooks/auth/AuthMutation";
 import { useUserStore } from "../../store/AuthStrore";
 import toast from "react-hot-toast";
@@ -14,12 +14,13 @@ export default function WalletPage() {
 
   const { data, isLoading, error } = useWalletInfo();
 
-  if (isLoading)
-    return (
-      <div className="p-10 text-center text-lg font-semibold">
-        Loading wallet...
-      </div>
-    );
+  if (isLoading) {
+  return (
+    <div className="flex justify-center py-20">
+      <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
+    </div>
+  );
+}
 
   if (error)
     return (
@@ -33,7 +34,7 @@ export default function WalletPage() {
   const transactions = wallet?.recentTransactions || [];
 
   const totalEarnings = transactions
-    .filter((t) => t.type === "credit")
+    .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
@@ -92,7 +93,7 @@ export default function WalletPage() {
                 onClick={() => setOpenWithdraw(true)}
                 className="
                   w-full md:w-auto px-6 sm:px-8 py-3
-                  bg-gradient-to-r from-amber-400 to-amber-500
+                  bg-linear-to-r from-amber-400 to-amber-500
                   text-stone-900 font-semibold rounded-xl shadow-sm
                   hover:from-amber-500 hover:to-amber-600 transition
                 "
@@ -154,39 +155,69 @@ export default function WalletPage() {
             </p>
           ) : (
             <div className="flex flex-col divide-y divide-stone-100">
-              {transactions.map((t) => (
-                <div
-                  key={t._id}
-                  className="py-4 flex items-center justify-between"
-                >
-                  {/* Left Details */}
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    {t.type === "credit" ? (
-                      <ArrowDownCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
-                    ) : (
-                      <ArrowUpCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />
-                    )}
+             {transactions.map((t) => (
+  <div
+    key={t._id}
+    className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+  >
+    {/* LEFT SECTION */}
+    <div className="flex items-start gap-3">
+      {/* Icon */}
+      {t.type === "withdrawal" ? (
+        <ArrowUpCircle className="w-6 h-6 text-red-500" />
+      ) : (
+        <ArrowDownCircle className="w-6 h-6 text-emerald-600" />
+      )}
 
-                    <div>
-                      <p className="font-semibold text-stone-800 text-sm sm:text-base">
-                        {t.message}
-                      </p>
-                      <p className="text-xs text-stone-500">
-                        {new Date(t.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
+      <div className="space-y-1">
+        {/* TYPE + STATUS */}
+        <p className="font-semibold text-stone-800 text-sm sm:text-base capitalize">
+          {t.type} — 
+          <span
+            className={`ml-1 px-2 py-0.5 text-xs rounded-full ${
+              t.status === "pending"
+                ? "bg-yellow-100 text-yellow-700"
+                : t.status === "approved"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {t.status}
+          </span>
+        </p>
 
-                  {/* Amount */}
-                  <p
-                    className={`text-sm sm:text-lg font-bold ${
-                      t.type === "credit" ? "text-emerald-600" : "text-red-500"
-                    }`}
-                  >
-                    {t.type === "credit" ? "+ " : "- "}₹{t.amount}
-                  </p>
-                </div>
-              ))}
+        {/* DATE */}
+        <p className="text-xs text-stone-500">
+          {new Date(t.createdAt).toLocaleString()}
+        </p>
+
+        {/* WITHDRAW ID IF AVAILABLE */}
+        {t.withdrawId && (
+          <p className="text-xs text-stone-600">
+            Withdraw ID: <span className="font-medium">{t.withdrawId}</span>
+          </p>
+        )}
+
+        {/* BALANCE BEFORE / AFTER */}
+        {t.balanceBefore !== undefined && t.balanceAfter !== undefined && (
+          <p className="text-xs text-stone-600">
+            Before: ₹{t.balanceBefore} → After: ₹{t.balanceAfter}
+          </p>
+        )}
+      </div>
+    </div>
+
+    {/* RIGHT SECTION - AMOUNT */}
+    <p
+      className={`text-lg font-bold ${
+        t.type === "deposit" ? "text-emerald-600" : "text-red-500"
+      }`}
+    >
+      {t.type === "deposit" ? "+ " : "- "}₹{t.amount}
+    </p>
+  </div>
+))}
+
             </div>
           )}
         </section>

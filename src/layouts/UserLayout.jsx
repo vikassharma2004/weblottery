@@ -1,3 +1,4 @@
+import FloatingSupportButton from "../components/FloatingSupportButton.jsx";
 import UserNavbar from "../components/layout/UserNavbar.jsx";
 import { Footer } from "./footer.jsx";
 
@@ -10,7 +11,7 @@ export default function UserLayout({ children }) {
         {children}
       </main>
 
-
+<FloatingSupportButton/>
     </div>
   );
 }

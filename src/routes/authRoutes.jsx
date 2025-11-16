@@ -83,7 +83,10 @@ export const authRoutes = [
   {
     path: "/faq",
     element: (
+      <UserLayout>
+
       <FAQSection/>
+      </UserLayout>
     ),
   },
   {

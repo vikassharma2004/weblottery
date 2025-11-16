@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import RoutesIndex from "./routes/RoutesIndex.jsx";
 import { useUserStore } from "./store/AuthStrore.js";
 import { getProfile } from "./api/AuthApi.js";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const { hydrated, user, setUser } = useUserStore();
@@ -16,10 +16,12 @@ function App() {
       try {
         if (!user) {
           const res = await getProfile();
+          console.log(res)
           if (res?.user) setUser(res.user);
         }
       } catch (err) {
         console.warn("No active session found.");
+       
       }
     })();
   }, [hydrated]);
