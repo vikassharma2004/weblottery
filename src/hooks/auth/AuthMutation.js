@@ -43,11 +43,11 @@ export const useWalletInfo = () => {
 };
 export const useRegister = () => {
 
-
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
       toast.success(data?.message || "Registration successful!");
+
     },
     onError: (err) =>
       toast.error(err?.response?.data?.message || "Registration failed"),
@@ -64,7 +64,6 @@ export const useLogin = () => {
     mutationFn: loginUser,
 
     onSuccess: (res) => {
-      console.log("LOGIN RESPONSE:", res);
 
       const message = res?.message?.toLowerCase();
 
@@ -251,8 +250,6 @@ export const usePaymentHistory = (status) => {
 };
 
 // 🔥 Mark Notifications as Read
-
-
 
 export const useWithdraw = () => {
   return useMutation({
