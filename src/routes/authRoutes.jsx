@@ -12,6 +12,7 @@ import FAQSection from "../FAQSection.jsx";
 import UserLayout from "../layouts/UserLayout.jsx";
 import SupportPage from "../pages/auth/Support.jsx";
 import ProtectedRoute from "../ProctedRoute.jsx";
+import PaymentSuccess from "../pages/auth/PaymentSuccess.jsx";
 export const authRoutes = [
   {
     path: "/auth/login",
@@ -69,6 +70,10 @@ export const authRoutes = [
       </AuthLayout>
     ),
   },
+  {
+  path: "/payment-success",
+  element: <PaymentSuccess/>,
+},
   {
     path: "/support",
     element: (

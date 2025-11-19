@@ -1,5 +1,15 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Gift, Wallet, User, Menu, X, LogOut, Bell } from "lucide-react";
+import {
+  Home,
+  Gift,
+  Wallet,
+  User,
+  Menu,
+  X,
+  LogOut,
+  Bell,
+  Megaphone,
+} from "lucide-react";
 import { COLORS } from "../../constant";
 import { useState } from "react";
 import logo from "../../assets/logo.webp";
@@ -13,7 +23,7 @@ export default function UserNavbar() {
   const navigate = useNavigate();
   const { clearAuth, user } = useUserStore();
   const { unreadCount } = useNotifications(true);
-  console.log(unreadCount)
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,7 +45,7 @@ export default function UserNavbar() {
           boxShadow: `0 4px 10px ${COLORS.SHADOW}`,
         }}
       >
-        {/* Logo */}
+        {/* LOGO */}
         <div
           className="flex items-center gap-2 cursor-pointer select-none"
           onClick={() => navigate("/")}
@@ -46,7 +56,7 @@ export default function UserNavbar() {
           </h1>
         </div>
 
-        {/* Desktop Navigation */}
+        {/* DESKTOP NAVIGATION */}
         <nav className="hidden md:flex items-center gap-10">
           <DesktopLink
             to="/"
@@ -66,13 +76,39 @@ export default function UserNavbar() {
                 icon={<Wallet className="w-4 h-4" />}
                 label="Wallet"
               />
+              <DesktopLink
+                to="/announcements"
+                icon={<Megaphone className="w-4 h-4" />}
+                label="Announcements"
+              />
             </>
           )}
         </nav>
 
-        {/* Right Side (Desktop) */}
+        {/* RIGHT SIDE (DESKTOP + MOBILE COMBINED) */}
         <div className="flex items-center gap-4">
-          {/* Mobile Toggle */}
+          {/* MOBILE NOTIFICATION BELL */}
+          {user && (
+            <div className="relative flex md:hidden items-center">
+              <button onClick={() => setOpen((p) => !p)} className="relative">
+                <Bell className="w-6 h-6 text-gray-800" />
+
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {open && (
+                <div className="absolute right-0 mt-2">
+                  <NotificationDropdown onClose={() => setOpen(false)} />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* MOBILE MENU ICON */}
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? (
               <X className="w-7 h-7 text-gray-800" />
@@ -81,33 +117,28 @@ export default function UserNavbar() {
             )}
           </button>
 
-         {user && (
-  <div className="relative flex items-center gap-2 group">
-    <button
-      onClick={() => setOpen((p) => !p)}
-      className="relative flex items-center gap-2"
-    >
-      <Bell className="w-6 h-6 text-gray-800" />
+          {/* DESKTOP NOTIFICATION BELL */}
+          {user && (
+            <div className="relative hidden md:flex items-center">
+              <button onClick={() => setOpen((p) => !p)} className="relative">
+                <Bell className="w-6 h-6 text-gray-800 cursor-pointer" />
 
-     
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
 
-      {/* Unread Badge */}
-      {unreadCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-          {unreadCount}
-        </span>
-      )}
-    </button>
+              {open && (
+                <div className="absolute right-0 mt-2 cursor-pointer">
+                  <NotificationDropdown onClose={() => setOpen(false)} />
+                </div>
+              )}
+            </div>
+          )}
 
-    {open && (
-      <div className="absolute right-0 mt-2">
-        <NotificationDropdown onClose={() => setOpen(false)} />
-      </div>
-    )}
-  </div>
-)}
-
-          {/* Desktop Avatar / Login */}
+          {/* DESKTOP AVATAR */}
           <div className="hidden md:block">
             {isLoggedIn ? (
               <div className="relative">
@@ -131,14 +162,20 @@ export default function UserNavbar() {
 
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 bg-white border rounded-xl shadow-lg w-44 py-2 text-sm font-medium">
-                    <DropdownLink to="/user/profile" label="My Profile" />
+                    <DropdownLink
+                      to="/user/profile"
+                      label="My Profile"
+                      onClose={() => setDropdownOpen(false)}
+                    />
                     <DropdownLink
                       to="/user/payment-history"
                       label="Payment History"
+                      onClose={() => setDropdownOpen(false)}
                     />
                     <DropdownLink
                       to="/profile/change-password"
-                      label="Change password"
+                      label="Change Password"
+                      onClose={() => setDropdownOpen(false)}
                     />
 
                     <button
@@ -160,49 +197,66 @@ export default function UserNavbar() {
             )}
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div
-            className="absolute top-16 left-0 w-full bg-white shadow-xl md:hidden animate-slideDown pb-6"
-            style={{ borderTop: `2px solid ${COLORS.PRIMARY}` }}
-          >
-            <div className="flex flex-col gap-2 p-6">
-              {/* SHOW ONLY IF LOGGED IN */}
-              {isLoggedIn ? (
-                <>
-                  <MobileLink to="/refer-earn" label="Refer & Earn" />
-                  <MobileLink to="/user/wallet" label="Wallet" />
-
-                  <MobileLink to="/user/profile" label="My Profile" />
-                  <MobileLink
-                    to="/profile/change-password"
-                    label="Change password"
-                  />
-                  <MobileLink
-                    to="/user/payment-history"
-                    label="Payment History"
-                  />
-
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 text-red-600 mt-3"
-                  >
-                    <LogOut className="w-4 h-4" /> Logout
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => navigate("/auth/login")}
-                  className="w-full mt-2 py-3 bg-black text-white rounded-lg text-center"
-                >
-                  Login
-                </button>
-              )}
-            </div>
-          </div>
-        )}
       </header>
+
+      {/* MOBILE DROPDOWN MENU */}
+      {menuOpen && (
+        <div
+          className="absolute top-16 left-0 w-full bg-white shadow-xl md:hidden animate-slideDown pb-6 z-50"
+          style={{ borderTop: `2px solid ${COLORS.PRIMARY}` }}
+        >
+          <div className="flex flex-col gap-2 p-6 z-10">
+            {isLoggedIn ? (
+              <>
+                <MobileLink
+                  to="/refer-earn"
+                  label="Refer & Earn"
+                  onClose={() => setMenuOpen(false)}
+                />
+                <MobileLink
+                  to="/user/wallet"
+                  label="Wallet"
+                  onClose={() => setMenuOpen(false)}
+                />
+                <MobileLink
+                  to="/user/profile"
+                  label="My Profile"
+                  onClose={() => setMenuOpen(false)}
+                />
+                <MobileLink
+                  to="/profile/change-password"
+                  label="Change Password"
+                  onClose={() => setMenuOpen(false)}
+                />
+                <MobileLink
+                  to="/user/payment-history"
+                  label="Payment History"
+                  onClose={() => setMenuOpen(false)}
+                />
+                <MobileLink
+                  to="/announcements"
+                  label="Announcements"
+                  onClose={() => setMenuOpen(false)}
+                />
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-red-600 mt-3"
+                >
+                  <LogOut className="w-4 h-4" /> Logout
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => navigate("/auth/login")}
+                className="w-full mt-2 py-3 bg-[#FFB800] text-black rounded-lg text-center"
+              >
+                Login
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <Toaster position="top-center" />
     </>
@@ -226,18 +280,23 @@ function DesktopLink({ to, icon, label }) {
   );
 }
 
-function DropdownLink({ to, label }) {
+function DropdownLink({ to, label, onClose }) {
   return (
-    <NavLink to={to} className="block px-4 py-2 hover:bg-gray-100">
+    <NavLink
+      to={to}
+      onClick={() => onClose && onClose()}
+      className="block px-4 py-2 hover:bg-gray-100"
+    >
       {label}
     </NavLink>
   );
 }
 
-function MobileLink({ to, label }) {
+function MobileLink({ to, label, onClose }) {
   return (
     <NavLink
       to={to}
+      onClick={() => onClose && onClose()}
       className={({ isActive }) =>
         `py-3 px-3 rounded-lg font-medium transition-all ${
           isActive ? "text-white shadow-md" : "text-gray-800 hover:bg-gray-100"

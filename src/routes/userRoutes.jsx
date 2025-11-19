@@ -5,6 +5,7 @@ import Wallet from "../pages/user/Wallet";
 import ProtectedRoute from "../ProctedRoute.jsx";
 import UserLayout from "../layouts/UserLayout.jsx";
 import PaymentHistory from "../pages/user/PaymentHistory.jsx";
+import Announcements from "../pages/user/Announcements.jsx";
 export const userRoutes = [
   {
     path: "/",
@@ -52,6 +53,16 @@ export const userRoutes = [
       <ProtectedRoute allowedRoles={["user"]}>
         <UserLayout>
           <PaymentHistory/>
+        </UserLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/Announcements",
+    element: (
+      <ProtectedRoute allowedRoles={["user"]}>
+        <UserLayout>
+          <Announcements/>
         </UserLayout>
       </ProtectedRoute>
     ),

@@ -7,7 +7,7 @@ import { useLogin } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
 
 const Login = () => {
-  const{ isPending,mutateAsync:login} = useLogin();
+  const { isPending, mutateAsync: login } = useLogin();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -20,23 +20,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // setLoading(true);
-if(formData.email==="" || formData.password===""){
-  toast.error("All fields are required!");
-  return;
-}
-    if(formData.password?.length<6){
+    if (formData.email === "" || formData.password === "") {
+      toast.error("All fields are required!");
+      return;
+    }
+    if (formData.password?.length < 6) {
       toast.error("Password must be at least 6 characters long.");
       setLoading(false);
       return;
     }
-     login(
-    {
+    login({
       email: formData.email,
       password: formData.password,
-    }
-   
-    
-  );
+    });
   };
 
   return (
@@ -150,11 +146,12 @@ if(formData.email==="" || formData.password===""){
           type="submit"
           disabled={loading}
           className={`w-full flex items-center justify-center gap-2 py-3 font-semibold rounded-xl shadow-md transition-all duration-200 ${
-            loading ||  formData.email === "" || formData.password === ""? "opacity-80 cursor-not-allowed" : "hover:opacity-90 cursor-pointer "
+            loading || formData.email === "" || formData.password === ""
+              ? "opacity-80 cursor-not-allowed"
+              : "hover:opacity-90 cursor-pointer "
           }`}
           style={{
-            backgroundImage:
-              "linear-gradient(90deg, #FFB800 0%, #FFCB45 100%)",
+            backgroundImage: "linear-gradient(90deg, #FFB800 0%, #FFCB45 100%)",
             color: COLORS.WHITE,
             boxShadow: `0 4px 10px ${COLORS.SHADOW}`,
           }}
@@ -200,7 +197,7 @@ if(formData.email==="" || formData.password===""){
         🎁 Earn <span style={{ color: COLORS.PRIMARY }}>₹50</span> bonus for
         every friend you refer!
       </div>
-      <FloatingSupportButton/>
+      <FloatingSupportButton />
     </div>
   );
 };

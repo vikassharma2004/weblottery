@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 const front = import.meta.env.VITE_API_FRONTEND_URL;
 
 export default function ReferEarnPage() {
-  const { user } = useUserStore();
+  const { clearAuth } = useUserStore();
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
 
   const [copied, setCopied] = useState(false);
@@ -17,6 +17,10 @@ export default function ReferEarnPage() {
   // ⬅️ Fetch referral data from backend
   const { data, isLoading, error } = useReferralSummary();
 
+  if(error?.response?.data?.message=="Session expired"){
+    toast.error("Session expired logging out...")
+    clearAuth();
+  }
  if (isLoading) {
   return (
     <div className="flex justify-center py-20">

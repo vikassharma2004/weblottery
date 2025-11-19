@@ -14,6 +14,10 @@ export default function WalletPage() {
 
   const { data, isLoading, error } = useWalletInfo();
 
+   if(error?.response?.data?.message=="Session expired"){
+    toast.error("Session expired logging out...")
+    clearAuth();
+  }
   if (isLoading) {
   return (
     <div className="flex justify-center py-20">
@@ -43,7 +47,7 @@ export default function WalletPage() {
         className="
           w-full 
           mx-auto 
-          px-0 sm:px-4 md:px-6 
+          px-0 sm:px-1 md:px-6 
           py-4 
           flex flex-col gap-10
         "

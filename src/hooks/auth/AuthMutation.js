@@ -18,7 +18,8 @@ import {
   getPaymentHistory,
   createWithdrawRequest,
   getProfile,
-  getNotifications
+  getNotifications,
+  createOrderApi
 } from "../../api/AuthApi";
 
 import { useUserStore } from "../../store/AuthStrore";
@@ -257,6 +258,7 @@ export const useWithdraw = () => {
     onSuccess: (data) => {
       toast.success(data?.message || "Withdrawal request submitted!");
     },
+    invalidateQueries: ["wallet-info"],
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Withdrawal failed");
     },
@@ -295,4 +297,16 @@ export const useNotifications = (enabled = true) => {
     markReadMutation,
     unreadCount,
   };
+};
+
+export const useCreateOrder = () => {
+  return useMutation({
+    mutationFn: createOrderApi,
+    onSuccess: (data) => {
+      toast.success("Order created successfully");
+    },
+    onError: (err) => {
+      toast.error(err?.response?.data?.message || "Order creation failed");
+    },
+  });
 };

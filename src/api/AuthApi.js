@@ -115,3 +115,7 @@ export const createWithdrawRequest = async ({ amount, upiId }) => {
   );
   return data;
 };
+export const createOrderApi = async (payload) => {
+  const { data } = await axios.post("/payment/create-order", payload);
+  return data;
+};

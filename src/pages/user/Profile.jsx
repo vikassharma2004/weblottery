@@ -12,6 +12,11 @@ export default function ProfilePage() {
   // Fetch profile
   const { data, isLoading, error } = useProfile();
 
+  
+   if(error?.response?.data?.message=="Session expired"){
+    toast.error("Session expired logging out...")
+    clearAuth();
+  }
   // Handle session expired
   React.useEffect(() => {
     if (!error) return;

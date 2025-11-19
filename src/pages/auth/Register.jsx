@@ -56,8 +56,14 @@ const Register = () => {
       referralCode: referralCode,
     },
     {
+       
       onSuccess: () => {
-        navigate("/auth/login");
+        navigate("/auth/verify-otp", {
+          state: { 
+            email: formData?.email,     // backend must return this
+            action: "verifyEmail",
+          },
+        });
       },
     }
   );

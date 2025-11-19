@@ -1,17 +1,30 @@
-
-import AdminSidebar from "../components/layout/AdminSidebar";
+'use client';
+import { useState } from 'react';
+import Sidebar from '../components/admin/Sidebar';
+import Navbar from '../components/admin/Navbar';
 
 export default function AdminLayout({ children }) {
-  return (
-    <div className="flex h-screen bg-[#050505] py-5 px-2">
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  return (
+    <div className="flex h-screen bg-background">
       {/* Sidebar */}
-      <AdminSidebar
-      />
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto">
-        {children}
-      </main>
+      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Navbar */}
+        <Navbar onMenuClick={toggleSidebar} />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="p-4 md:p-6 lg:p-8">{children}</div>
+        </main>
       </div>
-    
+    </div>
   );
 }

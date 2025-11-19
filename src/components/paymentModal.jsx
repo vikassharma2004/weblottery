@@ -1,7 +1,46 @@
+import axios from "axios";
+import { useCreateOrder } from "../hooks/auth/AuthMutation";
+import toast from "react-hot-toast";
 export function PaymentModal({ amount, onClose }) {
+  const createOrder = useCreateOrder();
+
+  const handlePayment = async () => {
+    try {
+      // 1. create order → get payment session ID
+      const res = await createOrder.mutateAsync({ amount });
+
+      const sessionId = res?.order?.payment_session_id;
+      if (!sessionId) {
+        toast.error("Payment session not found");
+        return;
+      }
+
+      console.log("Payment Session ID:", sessionId);
+
+      // 2. initiate cashfree payment
+      if (!window.Cashfree) {
+        toast.error("Cashfree SDK failed to load");
+        return;
+      }
+
+      const cashfree = new window.Cashfree({
+        mode: "sandbox", // change to "production" for live
+      });
+
+      cashfree.checkout({
+        paymentSessionId: sessionId,
+        redirectTarget: "_self",
+      });
+
+    } catch (err) {
+      console.log(err);
+      toast.error("Payment failed to start");
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center">
-      
+
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -19,7 +58,6 @@ export function PaymentModal({ amount, onClose }) {
           ✕
         </button>
 
-        {/* Heading */}
         <h2 className="text-2xl font-bold text-stone-900 text-center">
           Unlock Referral Earnings
         </h2>
@@ -28,13 +66,11 @@ export function PaymentModal({ amount, onClose }) {
           Make a one-time payment to activate your referral program and start earning.
         </p>
 
-        {/* Amount Box */}
         <div className="mt-6 bg-amber-50 border border-amber-200 p-4 rounded-xl flex items-center justify-between">
           <span className="text-stone-700 font-medium">Activation Fee</span>
           <span className="text-2xl font-bold text-stone-900">₹{amount}</span>
         </div>
 
-        {/* Rules */}
         <div className="mt-6 bg-stone-50 border border-stone-200 p-4 rounded-xl">
           <p className="text-sm font-semibold text-stone-800 mb-2">Please Note:</p>
           <ul className="text-sm text-stone-600 space-y-2">
@@ -45,16 +81,13 @@ export function PaymentModal({ amount, onClose }) {
           </ul>
         </div>
 
-        {/* Pay Button */}
         <button
-          onClick={() => {
-            console.log("Pay Now Clicked");
-            // here you will open Razorpay or your payment API
-          }}
+          onClick={handlePayment}
           className="w-full mt-6 h-12 rounded-lg bg-linear-to-r from-amber-400 to-amber-500 text-stone-900 font-semibold shadow-md hover:from-amber-500 hover:to-amber-600 transition cursor-pointer"
         >
           Proceed to Pay
         </button>
+
       </div>
     </div>
   );
