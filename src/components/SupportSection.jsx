@@ -54,7 +54,7 @@ export function SupportSection() {
           {/* Support Page Button */}
           <button
             onClick={() => navigate("/support")}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 shadow-md hover:scale-[1.02] transition font-semibold text-stone-900"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-amber-400 to-amber-500 shadow-md hover:scale-[1.02] transition font-semibold text-stone-900"
           >
             <MessageSquare className="w-5 h-5 text-stone-900" />
             Contact Support

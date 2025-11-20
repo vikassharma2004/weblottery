@@ -17,3 +17,40 @@ export const COLORS = {
   WHITE: "#FFFFFF",
   BLACK: "#000000",
 };
+
+export const ADMINCOLORS ={
+  sidebar: "#1A1A1A",
+  sidebarAccent: "#222222",
+  primary: "#F5B041",
+  card: "#1F1F1F",
+  border: "#333333",
+  accent: "#262626",
+  foreground: "#FAFAFA",
+  muted: "#A9A9A9",
+  destructive: "#E74C3C",
+}
+
+
+
+
+
+
+
+
+/** helper: convert hex to rgba string */
+export function hexToRgba(hex, alpha = 1) {
+  let h = hex.replace('#','');
+  if (h.length === 3) h = h.split('').map(c => c + c).join('');
+  const r = parseInt(h.substring(0,2),16);
+  const g = parseInt(h.substring(2,4),16);
+  const b = parseInt(h.substring(4,6),16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+
+
+
+
+
+
+

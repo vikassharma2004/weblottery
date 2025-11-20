@@ -128,10 +128,8 @@ export const useLogout = async() => {
 
   return useMutation ({
     mutationFn: logoutUser,
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
 
-/*******  3f70e588-b2fa-4c33-aaf3-1a97d4886880  *******/
+
     onSuccess:async () => {
       await logout();
       toast.success("Logged out successfully");

@@ -6,6 +6,7 @@ import Reports from "../pages/admin/Reports";
 import Payments from "../pages/admin/Payments";
 import Withdraws from "../pages/admin/Withdraws";
 import AdminLayout from "../layouts/AdminLayout";
+import Sessions from "../pages/admin/Sessions";
 
 export const adminRoutes = [
   {
@@ -13,7 +14,6 @@ export const adminRoutes = [
     element: (
       <ProtectedRoute allowedRoles={["admin"]}>
         <AdminLayout>
-
         <Dashboard />
         </AdminLayout>
       </ProtectedRoute>
@@ -24,7 +24,6 @@ export const adminRoutes = [
     element: (
       <ProtectedRoute allowedRoles={["admin"]}>
          <AdminLayout>
-
         <Users />
          </AdminLayout>
       </ProtectedRoute>
@@ -35,7 +34,6 @@ export const adminRoutes = [
     element: (
       <ProtectedRoute allowedRoles={["admin"]}>
          <AdminLayout>
-
         <Reports />
          </AdminLayout>
       </ProtectedRoute>
@@ -46,8 +44,17 @@ export const adminRoutes = [
     element: (
       <ProtectedRoute allowedRoles={["admin"]}>
          <AdminLayout>
-
         <Payments />
+         </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/sessions",
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+         <AdminLayout>
+        <Sessions />
          </AdminLayout>
       </ProtectedRoute>
     ),

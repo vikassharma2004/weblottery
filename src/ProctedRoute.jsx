@@ -3,14 +3,10 @@ import { useUserStore } from "./store/AuthStrore";
 
 export default function ProtectedRoute({ children, allowedRoles = [] }) {
   const { user, token } = useUserStore(); // 👈 get from store
+  // const isAuth = Boolean(token);          // auth check
+  const role = user?.role
 
-  const isAuth = Boolean(token);          // auth check
-  const role = user?.role // user role
 
-  // Not logged in
-  if (!isAuth) {
-    return <Navigate to="/" replace />;
-  }
 
   // Role not allowed
   if (allowedRoles.length && !allowedRoles.includes(role)) {

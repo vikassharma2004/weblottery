@@ -5,7 +5,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useLogin } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
-
+import { getClientDeviceInfo } from "../../hooks/auth/deviceinfo";
 const Login = () => {
   const { isPending, mutateAsync: login } = useLogin();
 
@@ -32,6 +32,7 @@ const Login = () => {
     login({
       email: formData.email,
       password: formData.password,
+      deviceInfo: getClientDeviceInfo()
     });
   };
 

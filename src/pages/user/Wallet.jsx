@@ -328,7 +328,7 @@ function WithdrawModal({ balance, onClose }) {
           disabled={isPending}
           onClick={handleSubmit}
           className={`w-full h-12 mt-6 rounded-lg font-semibold text-stone-900 
-            bg-gradient-to-r from-amber-400 to-amber-500 shadow-md
+            bg-linear-to-r from-amber-400 to-amber-500 shadow-md
             hover:from-amber-500 hover:to-amber-600 transition
             ${isPending ? "opacity-60 cursor-not-allowed" : ""}
           `}

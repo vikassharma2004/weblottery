@@ -63,8 +63,14 @@ export default function UserNavbar() {
             icon={<Home className="w-4 h-4" />}
             label="Home"
           />
-
-          {isLoggedIn && (
+          {isLoggedIn && user.role != "user" && (
+            <DesktopLink
+              to="/admin/dashboard"
+              icon={<Home className="w-4 h-4" />}
+              label="Dashbaord"
+            />
+          )}
+          {isLoggedIn && user.role === "user" && (
             <>
               <DesktopLink
                 to="/refer-earn"
@@ -118,7 +124,7 @@ export default function UserNavbar() {
           </button>
 
           {/* DESKTOP NOTIFICATION BELL */}
-          {user && (
+          {user && user.role == "user" && (
             <div className="relative hidden md:flex items-center">
               <button onClick={() => setOpen((p) => !p)} className="relative">
                 <Bell className="w-6 h-6 text-gray-800 cursor-pointer" />

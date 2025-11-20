@@ -21,6 +21,7 @@
     "react-router-dom": "^7.9.5",
     "recharts": "^3.4.1",
     "tailwindcss": "^4.1.17",
+    "ua-parser-js": "^2.0.6",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
