@@ -6,7 +6,8 @@ import Reports from "../pages/admin/Reports";
 import Payments from "../pages/admin/Payments";
 import Withdraws from "../pages/admin/Withdraws";
 import AdminLayout from "../layouts/AdminLayout";
-import Sessions from "../pages/admin/Sessions";
+import PaymentProof from "../pages/admin/PaymentProof";
+import AdminAnnouncementsPage from "../pages/admin/AnnouncementsPage";
 
 export const adminRoutes = [
   {
@@ -15,6 +16,26 @@ export const adminRoutes = [
       <ProtectedRoute allowedRoles={["admin"]}>
         <AdminLayout>
         <Dashboard />
+        </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/PaymentProof",
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <AdminLayout>
+        <PaymentProof/>
+        </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/announcements",
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <AdminLayout>
+        <AdminAnnouncementsPage/>
         </AdminLayout>
       </ProtectedRoute>
     ),
@@ -49,16 +70,7 @@ export const adminRoutes = [
       </ProtectedRoute>
     ),
   },
-  {
-    path: "/admin/sessions",
-    element: (
-      <ProtectedRoute allowedRoles={["admin"]}>
-         <AdminLayout>
-        <Sessions />
-         </AdminLayout>
-      </ProtectedRoute>
-    ),
-  },
+
   {
     path: "/admin/withdraws",
     element: (

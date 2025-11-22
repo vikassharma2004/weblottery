@@ -61,3 +61,25 @@ export const getAnalyticsService = async () => {
 
   return data; // returns { success, withdrawalData, usersData, paymentsData, recentTransactions }
 };
+
+
+
+export const getAllUsersService = async ({
+  page = 1,
+  limit = 20,
+  email = "",
+  hasPaid = "",
+  isSuspended = "",
+}) => {
+  let url = `/admin/users/all?page=${page}&limit=${limit}`;
+
+  if (email) url += `&email=${email}`;
+  if (hasPaid) url += `&hasPaid=${hasPaid}`;
+  if (isSuspended) url += `&isSuspended=${isSuspended}`;
+
+  const { data } = await axios.get(url, {
+    withCredentials: true, // admin session middleware uses cookies
+  });
+
+  return data;
+};

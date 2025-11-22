@@ -253,7 +253,7 @@ export function WithdrawalTable() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%" }}>
             <thead>
-              <tr style={{ background: ADMINCOLORS.accent }}>
+              <tr style={{ background:ADMINCOLORS.rowHighlight,border:ADMINCOLORS.rowHighlightBorder }}>
                 {[
                   { label: "Name", key: "name" },
                   { label: "Email", key: "email" },

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { LayoutDashboard, BarChart3, CreditCard, Bell, LogOut, ChevronLeft } from 'lucide-react';
+import { LayoutDashboard, BarChart3, CreditCard, Bell, LogOut, ChevronLeft, Users, Wallet, FileCheck, Flag } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from "../../assets/logo.webp";
 import { ADMINCOLORS } from '../../constant';
@@ -10,10 +10,15 @@ import { useLogout } from '../../hooks/auth/AuthMutation';
 import { axiosInstance as axios } from '../../config/axios';
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
-  { id: 'payments', label: 'Payments', icon: CreditCard, href: '/admin/payments' },
-  { id: 'withdrawals', label: 'Withdrawals', icon: CreditCard, href: '/admin/withdraws'},
-  { id: 'sessions', label: 'session', icon: CreditCard, href: '/admin/sessions' },
-  { id: 'reports', label: 'Reports', icon: BarChart3, href: '/admin/reports' },
+
+  { id: 'users', label: 'Users', icon: Users, href: '/admin/users' },
+
+  { id: 'withdrawals', label: 'Withdrawals', icon: Wallet, href: '/admin/withdraws' },
+
+  { id: 'paymentProof', label: 'Payment Proof', icon: FileCheck, href: '/admin/PaymentProof' },
+  { id: 'announcements', label: 'announcements', icon: Bell, href: '/admin/announcements' },
+
+  { id: 'reports', label: 'Reports', icon: Flag, href: '/admin/reports' },
 ];
 
 export default function Sidebar({ isOpen, onToggle }) {

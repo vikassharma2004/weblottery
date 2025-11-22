@@ -163,7 +163,7 @@ export function ReportTable() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%" }}>
             <thead>
-              <tr style={{ background: ADMINCOLORS.accent }}>
+              <tr style={{ background: ADMINCOLORS.rowHighlight}}>
                 {[
                   { label: "Email", key: "email" },
                   { label: "Status", key: "status" },
@@ -254,6 +254,7 @@ export function ReportTable() {
                     </td>
                     <td style={{ padding: 16 }}>
                       <button
+                      className="cursor-pointer"
                         style={{
                           padding: "6px 12px",
                           background: ADMINCOLORS.primary,

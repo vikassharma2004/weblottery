@@ -4,6 +4,7 @@ import { Menu, Bell, Settings, User, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { ADMINCOLORS } from '../../constant';
 import { useUserStore } from '../../store/AuthStrore';
+import { Link } from 'react-router-dom';
 export default function Navbar({ onMenuClick }) {
   const {user}=useUserStore()
   const [showProfile, setShowProfile] = useState(false);
@@ -94,20 +95,31 @@ export default function Navbar({ onMenuClick }) {
                  {user?.email}
                 </p>
               </div>
+              <Link to={"/profile/change-password"}
+                className="p-3 border-b"
+                style={{ borderColor: ADMINCOLORS.border }}
+              >
+                <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
+                  Change password
+                </p>
+               
+              </Link>
+             
+             
+               <div
+                className="p-3 border-b"
+                style={{ borderColor: ADMINCOLORS.border }}
+              >
+                <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
+                  Settings
+                </p>
+               
+              </div>
 
 
              
 
-              <button
-                className="w-full text-left px-4 py-2 text-sm border-t transition-colors cursor-pointer"
-                style={{
-                  borderColor: ADMINCOLORS.border,
-                  color: ADMINCOLORS.destructive,
-                  backgroundColor: ADMINCOLORS.accent
-                }}
-              >
-                Logout
-              </button>
+            
             </div>
           )}
         </div>

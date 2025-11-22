@@ -28,6 +28,9 @@ export const ADMINCOLORS ={
   foreground: "#FAFAFA",
   muted: "#A9A9A9",
   destructive: "#E74C3C",
+   rowHighlight: "#F5B04133",
+   rowHighlightBorder: "#F5B04155",
+
 }
 
 

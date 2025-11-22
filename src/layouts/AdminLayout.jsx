@@ -21,8 +21,8 @@ export default function AdminLayout({ children }) {
         <Navbar onMenuClick={toggleSidebar} />
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
-          <div className="p-4 md:p-6 lg:p-2 rounded-lg">{children}</div>
+        <main className="flex-1 overflow-auto ">
+          <div className="p-2 md:p-2 lg:p-1 rounded-xl">{children}</div>
         </main>
       </div>
     </div>
