@@ -8,6 +8,7 @@ import Withdraws from "../pages/admin/Withdraws";
 import AdminLayout from "../layouts/AdminLayout";
 import PaymentProof from "../pages/admin/PaymentProof";
 import AdminAnnouncementsPage from "../pages/admin/AnnouncementsPage";
+import Settings from "../pages/admin/Settings";
 
 export const adminRoutes = [
   {
@@ -36,6 +37,16 @@ export const adminRoutes = [
       <ProtectedRoute allowedRoles={["admin"]}>
         <AdminLayout>
         <AdminAnnouncementsPage/>
+        </AdminLayout>
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/settings",
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <AdminLayout>
+        <Settings/>
         </AdminLayout>
       </ProtectedRoute>
     ),

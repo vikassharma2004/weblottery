@@ -96,7 +96,7 @@ export default function Navbar({ onMenuClick }) {
                 </p>
               </div>
               <Link to={"/profile/change-password"}
-                className="p-3 border-b"
+                className="p-4 border-b"
                 style={{ borderColor: ADMINCOLORS.border }}
               >
                 <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
@@ -104,22 +104,6 @@ export default function Navbar({ onMenuClick }) {
                 </p>
                
               </Link>
-             
-             
-               <div
-                className="p-3 border-b"
-                style={{ borderColor: ADMINCOLORS.border }}
-              >
-                <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
-                  Settings
-                </p>
-               
-              </div>
-
-
-             
-
-            
             </div>
           )}
         </div>

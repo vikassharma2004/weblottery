@@ -48,7 +48,6 @@ const typeConfig = {
 export default function AnnouncementCard({ announcement }) {
   const config = typeConfig[announcement.type] || typeConfig.info;
   const Icon = config.icon;
-
   return (
     <div
       className={`overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${config.bg} ${config.border}`}

@@ -2,29 +2,14 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import { ChevronDown, ChevronUp, Eye, X } from "lucide-react";
+import toast from "react-hot-toast";
 import { ADMINCOLORS } from "../constant";
+import SkeletonRow from "./SkeletonRow";
 
-// ------- TEMP DATA -------
-const dummyPaymentProofs = [
-  {
-    _id: "1",
-    email: "john@example.com",
-    utrId: "UTR123456",
-    proofImageUrl:
-      "https://wazirx.com/blog/wp-content/uploads/2022/08/03-473x1024.jpg",
-    status: "pending",
-    createdAt: "2025-01-03T08:21:00.000Z",
-  },
-  {
-    _id: "2",
-    email: "test@gmail.com",
-    utrId: "UTR987654",
-    proofImageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROOMnCtbUny1_IhBzQU0IluDWLpINEwD-x8hVkPKCb28GMndbI83D2x9uU3t1D_VQNz6s&usqp=CAU",
-    status: "approved",
-    createdAt: "2025-01-10T11:22:00.000Z",
-  },
-];
+import {
+  usePendingPayments,
+  useVerifyPayment,
+} from "../hooks/auth/AdminMutation";
 
 const statusColor = {
   pending: { bg: "#FBBF2433", color: "#FBBF24" },
@@ -33,7 +18,7 @@ const statusColor = {
 };
 
 export function PaymentProofTable() {
-  // ------------ URL PARAMS ----------------
+  // URL PARAMS
   const [searchParams, setSearchParams] = useState(
     new URLSearchParams(window.location.search)
   );
@@ -42,7 +27,6 @@ export function PaymentProofTable() {
   const startDate = searchParams.get("startDate") || "";
   const endDate = searchParams.get("endDate") || "";
 
-  // Controlled inputs
   const [startInput, setStartInput] = useState(startDate);
   const [endInput, setEndInput] = useState(endDate);
 
@@ -55,6 +39,7 @@ export function PaymentProofTable() {
   const updateFilter = useCallback(
     (key, value) => {
       const params = new URLSearchParams(searchParams);
+
       if (value) params.set(key, value);
       else params.delete(key);
 
@@ -76,7 +61,18 @@ export function PaymentProofTable() {
     return () => clearTimeout(t);
   }, [endInput]);
 
-  // ------------ SORTING ----------------
+  // FETCH DATA (REAL BACKEND)
+  const { data, isLoading } = usePendingPayments({
+    page,
+    limit: 20,
+    startDate,
+    endDate,
+  });
+
+  const proofs = data?.list || [];
+  const totalPages = data?.totalPages || 1;
+
+  // SORTING
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "desc",
@@ -89,21 +85,8 @@ export function PaymentProofTable() {
     }));
   };
 
-  // ------------ FILTERING ----------------
-  const filtered = useMemo(() => {
-    return dummyPaymentProofs.filter((p) => {
-      const itemDate = new Date(p.createdAt);
-
-      if (startDate && new Date(startDate) > itemDate) return false;
-      if (endDate && itemDate > new Date(endDate + "T23:59:59")) return false;
-
-      return true;
-    });
-  }, [startDate, endDate]);
-
-  // ------------ SORTED DATA ----------------
   const sorted = useMemo(() => {
-    return [...filtered].sort((a, b) => {
+    return [...proofs].sort((a, b) => {
       const A = a[sortConfig.key];
       const B = b[sortConfig.key];
 
@@ -117,19 +100,7 @@ export function PaymentProofTable() {
         ? String(A).localeCompare(String(B))
         : String(B).localeCompare(String(A));
     });
-  }, [filtered, sortConfig]);
-
-  // ------------ PAGINATION ----------------
-  const limit = 5;
-  const totalPages = Math.ceil(sorted.length / limit);
-
-  const paginated = sorted.slice((page - 1) * limit, page * limit);
-
-  const movePage = (delta) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", String(page + delta));
-    updateURL(params);
-  };
+  }, [proofs, sortConfig]);
 
   const clearFilters = () => {
     const params = new URLSearchParams();
@@ -138,15 +109,12 @@ export function PaymentProofTable() {
     setEndInput("");
   };
 
-  // ------------ MODAL ----------------
   const [selectedProof, setSelectedProof] = useState(null);
 
   return (
     <div className="space-y-5">
-
       {/* FILTERS */}
       <div className="bg-[#1F1F1F] border border-[#333] p-5 rounded-lg grid grid-cols-1 sm:grid-cols-3 gap-4">
-
         <div>
           <label className="text-sm text-white font-semibold">Start Date</label>
           <input
@@ -181,7 +149,7 @@ export function PaymentProofTable() {
       <div className="bg-[#1F1F1F] border border-[#333] rounded-lg overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr style={{background:ADMINCOLORS.rowHighlight}}>
+            <tr style={{ background: ADMINCOLORS.rowHighlight }}>
               {[
                 { label: "Email", key: "email" },
                 { label: "Status", key: "status" },
@@ -214,48 +182,51 @@ export function PaymentProofTable() {
           </thead>
 
           <tbody>
-            {paginated.map((p, index) => (
-              <tr
-                key={p._id}
-                className={`${
-                  index % 2 === 0 ? "bg-[#1E1E1E]" : "bg-[#262626]"
-                } border-b border-[#333]`}
-              >
-                <td className="p-4 text-white">{p.email}</td>
-
-                <td className="p-4">
-                  <span
-                    className="px-3 py-1 rounded-full text-xs font-semibold"
-                    style={{
-                      background: statusColor[p.status].bg,
-                      color: statusColor[p.status].color,
-                    }}
-                  >
-                    {p.status}
-                  </span>
-                </td>
-
-                <td className="p-4 text-gray-400">
-                  {new Date(p.createdAt).toLocaleDateString()}
-                </td>
-
-                <td className="p-4">
-                  <button
-                    onClick={() => setSelectedProof(p)}
-                    className="flex items-center gap-2 bg-[#F5B041] px-3 py-1.5 rounded-lg font-medium text-black"
-                  >
-                    <Eye size={16} /> View
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {paginated.length === 0 && (
-              <tr>
-                <td
-                  colSpan="4"
-                  className="p-8 text-center text-gray-400"
+            {isLoading ? (
+              <>
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+              </>
+            ) : proofs.length > 0 ? (
+              sorted.map((p, index) => (
+                <tr
+                  key={p._id}
+                  className={`${
+                    index % 2 === 0 ? "bg-[#1E1E1E]" : "bg-[#262626]"
+                  } border-b border-[#333]`}
                 >
+                  <td className="p-4 text-white">{p.email}</td>
+
+                  <td className="p-4">
+                    <span
+                      className="px-3 py-1 rounded-full text-xs font-semibold"
+                      style={{
+                        background: statusColor[p.status].bg,
+                        color: statusColor[p.status].color,
+                      }}
+                    >
+                      {p.status}
+                    </span>
+                  </td>
+
+                  <td className="p-4 text-gray-400">
+                    {new Date(p.createdAt).toLocaleDateString()}
+                  </td>
+
+                  <td className="p-4">
+                    <button
+                      onClick={() => setSelectedProof(p)}
+                      className="flex cursor-pointer items-center gap-2 bg-[#F5B041] px-3 py-1.5 rounded-lg font-medium text-black"
+                    >
+                      <Eye size={16} /> View
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="p-8 text-center text-gray-400">
                   No payment proofs found.
                 </td>
               </tr>
@@ -266,10 +237,13 @@ export function PaymentProofTable() {
 
       {/* PAGINATION */}
       <div className="flex justify-between items-center text-white mt-3">
-
         <button
           disabled={page <= 1}
-          onClick={() => movePage(-1)}
+          onClick={() => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", String(page - 1));
+            updateURL(params);
+          }}
           className={`px-4 py-2 rounded-lg ${
             page <= 1 ? "bg-gray-500 cursor-not-allowed" : "bg-[#F5B041]"
           }`}
@@ -283,54 +257,125 @@ export function PaymentProofTable() {
 
         <button
           disabled={page >= totalPages}
-          onClick={() => movePage(1)}
+          onClick={() => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", String(page + 1));
+            updateURL(params);
+          }}
           className={`px-4 py-2 rounded-lg ${
             page >= totalPages ? "bg-gray-500 cursor-not-allowed" : "bg-[#F5B041]"
           }`}
         >
           Next
         </button>
-
       </div>
 
       {/* MODAL */}
       {selectedProof && (
-        <div
-          onClick={() => setSelectedProof(null)}
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999] p-4"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#1F1F1F] border border-[#333] rounded-xl w-full max-w-md max-h-[85vh] flex flex-col"
-          >
-            <div className="px-5 py-4 border-b border-[#333] text-white font-semibold text-lg">
-              Payment Proof
-            </div>
-
-            <div className="p-5 overflow-y-auto flex-1 space-y-4">
-              <img
-                src={selectedProof.proofImageUrl}
-                alt="Proof"
-                className="w-full max-h-[300px] object-contain rounded-md"
-              />
-
-              <select className="w-full px-3 py-2 rounded-lg bg-[#262626] border border-[#333] text-white">
-                <option value="approve">Approve</option>
-                <option value="reject">Reject</option>
-              </select>
-            </div>
-
-            <div className="p-4 border-t border-[#333]">
-              <button
-                onClick={() => setSelectedProof(null)}
-                className="w-full py-2.5 bg-red-500 text-white rounded-lg font-semibold"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+        <PaymentModal
+          proof={selectedProof}
+          onClose={() => setSelectedProof(null)}
+        />
       )}
+    </div>
+  );
+}
+
+/* -----------------------
+    MODAL CONTENT
+------------------------ */
+function PaymentModal({ proof, onClose }) {
+  const { mutate: verifyPayment, isPending } = useVerifyPayment();
+
+  const [status, setStatus] = useState("approved");
+  const [adminNote, setAdminNote] = useState("");
+
+  const handleSubmit = () => {
+    if (status === "rejected" && !adminNote.trim()) {
+      return toast.error("Enter a reason for rejection");
+    }
+
+    verifyPayment(
+      {
+        id: proof._id,
+        status,
+        adminNote,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Payment updated");
+          onClose();
+        },
+      }
+    );
+  };
+
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999] p-4"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#1F1F1F] border border-[#333] rounded-xl w-full max-w-md max-h-[85vh] flex flex-col"
+      >
+        <div className="px-5 py-4 border-b border-[#333] text-white font-semibold text-lg">
+          Payment Proof
+        </div>
+
+        <div className="p-5 overflow-y-auto flex-1 space-y-4">
+          <img
+            src={proof.proofImageUrl}
+            alt="Proof"
+            className="w-full max-h-[300px] object-contain rounded-md"
+          />
+
+          {/* Status Select */}
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-[#262626] border border-[#333] text-white"
+          >
+            <option value="approved">Approve</option>
+            <option value="rejected">Reject</option>
+          </select>
+
+          {status === "rejected" && (
+            <textarea
+              rows={3}
+              placeholder="Reason for rejection (required)"
+              value={adminNote}
+              onChange={(e) => setAdminNote(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-[#262626] border border-[#333] text-white"
+            ></textarea>
+          )}
+        </div>
+
+        <div className="p-4 border-t border-[#333] flex gap-3">
+          <button
+            onClick={onClose}
+            className="w-1/2 py-2.5 bg-red-500 text-white rounded-lg font-semibold"
+          >
+            Close
+          </button>
+
+          <button
+            disabled={isPending}
+            onClick={handleSubmit}
+            className={`w-1/2 py-2.5 rounded-lg font-semibold text-black ${
+              isPending
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#F5B041] cursor-pointer"
+            }`}
+          >
+            {isPending
+              ? "Processing..."
+              : status === "approved"
+              ? "Approve"
+              : "Reject"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

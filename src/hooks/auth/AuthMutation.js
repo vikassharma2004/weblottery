@@ -19,7 +19,7 @@ import {
   createWithdrawRequest,
   getProfile,
   getNotifications,
-  createOrderApi
+
 } from "../../api/AuthApi";
 
 import { useUserStore } from "../../store/AuthStrore";

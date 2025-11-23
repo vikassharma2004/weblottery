@@ -22,7 +22,7 @@ export function DashboardCharts() {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="p-6 animate-pulse h-[320px] bg-opacity-20" 
+          <Card key={i} className="p-6 animate-pulse h-80 bg-opacity-20" 
             style={{ background: ADMINCOLORS.card, border: `1px solid ${ADMINCOLORS.border}` }}>
             <div className="h-full w-full bg-gray-700 rounded-lg opacity-30"></div>
           </Card>
@@ -50,11 +50,11 @@ export function DashboardCharts() {
                 contentStyle={{
                   backgroundColor: ADMINCOLORS.card,
                   border: `1px solid ${ADMINCOLORS.border}`,
-                  color: ADMINCOLORS.foreground,
+                  color:ADMINCOLORS.rowHighlight,
                 }}
               />
               <Legend />
-              <Line type="monotone" dataKey="amount" stroke={ADMINCOLORS.accent} strokeWidth={2} name="Amount (₹)" />
+              <Line type="monotone" dataKey="amount" stroke={ADMINCOLORS.accent} strokeWidth={2} name="Amount (₹)"/>
               <Line type="monotone" dataKey="count" stroke={ADMINCOLORS.primary} strokeWidth={2} name="Requests" />
             </LineChart>
           </ResponsiveContainer>

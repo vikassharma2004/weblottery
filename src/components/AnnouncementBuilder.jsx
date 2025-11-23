@@ -4,37 +4,49 @@ import { ADMINCOLORS } from "../constant";
 import AnnouncementCard from "./AnnouncementCard";
 import BannerSection from "./BannerSection";
 
+import { useCreateAnnouncement, useUpdateAnnouncement } from "../hooks/auth/AdminMutation";
+
 export default function AnnouncementBuilder({ initialData, onBack }) {
   const isEditing = Boolean(initialData);
 
+  const createAnnouncement = useCreateAnnouncement();
+   const updateAnnouncement = useUpdateAnnouncement();
+const createdAt=initialData?.createdAt || new Date().toISOString();
   const [title, setTitle] = useState(initialData?.title || "");
   const [message, setMessage] = useState(initialData?.message || "");
   const [type, setType] = useState(initialData?.type || "info");
   const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
 
-  // 🔥 FIX: Build preview object properly
-  const previewData = {
-    title,
-    message,
-    type,
-    isActive,
-  };
+  const previewData = { title, message, type, isActive,createdAt };
 
   const handleSubmit = () => {
     const payload = { title, message, type, isActive };
 
     if (isEditing) {
-      console.log("Updating announcement:", payload);
+      // 🔥 UPDATE ANNOUNCEMENT
+      updateAnnouncement.mutate(
+        { id: initialData._id, payload },
+        {
+          onSuccess: () => {
+            onBack(); // go back only when update succeeds
+          },
+        }
+      );
     } else {
-      console.log("Creating new announcement:", payload);
+    createAnnouncement.mutate(payload);
+    setTitle("");
+    setMessage("");
+    setType("info");
+    setIsActive(true);
+    onBack();
     }
   };
 
-  return (
-    <>
-    <div className="flex justify-center gap-4 ">
+  const loading = createAnnouncement.isPending;
 
-    
+  return (
+    <div className="flex justify-center gap-4">
+      {/* LEFT SECTION - FORM */}
       <div
         className="p-6 rounded-xl max-w-3xl mx-auto w-1/2"
         style={{
@@ -45,12 +57,12 @@ export default function AnnouncementBuilder({ initialData, onBack }) {
         {/* BACK BUTTON */}
         <button
           onClick={onBack}
-          className="flex items-center gap-2 mb-4 text-white cussor-pointer"
+          className="flex items-center gap-2 mb-4 text-white cursor-pointer"
         >
           <ArrowLeft size={18} /> Back
         </button>
 
-        {/* Heading */}
+        {/* HEADER */}
         <h1
           className="text-2xl font-bold mb-4"
           style={{ color: ADMINCOLORS.foreground }}
@@ -96,7 +108,7 @@ export default function AnnouncementBuilder({ initialData, onBack }) {
             </select>
           </div>
 
-          {/* Active */}
+          {/* Active Status */}
           <div>
             <label className="text-white block mb-1">Active Status</label>
             <select
@@ -109,18 +121,23 @@ export default function AnnouncementBuilder({ initialData, onBack }) {
             </select>
           </div>
 
-          {/* SUBMIT */}
+          {/* SUBMIT BUTTON */}
           <button
             onClick={handleSubmit}
-            className="w-full py-3 rounded-lg font-semibold"
+            disabled={loading}
+            className="w-full py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             style={{ background: ADMINCOLORS.primary, color: "#000" }}
           >
-            {isEditing ? "Update Announcement" : "Create Announcement"}
+            {loading
+              ? "Saving..."
+              : isEditing
+              ? "Update Announcement"
+              : "Create Announcement"}
           </button>
         </div>
       </div>
 
-      {/* RIGHT SIDE — LIVE PREVIEW */}
+      {/* RIGHT SECTION — PREVIEW */}
       <div className="bg-[#1F1F1F] p-6 rounded-xl border border-[#333] mt-6 max-w-3xl mx-auto w-1/2">
         <h2 className="text-xl font-bold text-white mb-4">Preview</h2>
 
@@ -130,7 +147,6 @@ export default function AnnouncementBuilder({ initialData, onBack }) {
           <AnnouncementCard announcement={previewData} />
         )}
       </div>
-      </div>
-    </>
+    </div>
   );
 }

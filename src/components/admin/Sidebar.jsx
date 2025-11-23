@@ -1,7 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { LayoutDashboard, BarChart3, CreditCard, Bell, LogOut, ChevronLeft, Users, Wallet, FileCheck, Flag } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  ChevronLeft,
+  LogOut,
+  Wallet,
+  FileCheck,
+  Megaphone,
+  Settings,
+  FileWarning,
+} from "lucide-react";
 import { Link, useLocation } from 'react-router-dom';
 import logo from "../../assets/logo.webp";
 import { ADMINCOLORS } from '../../constant';
@@ -9,18 +19,56 @@ import { useUserStore } from '../../store/AuthStrore';
 import { useLogout } from '../../hooks/auth/AuthMutation';
 import { axiosInstance as axios } from '../../config/axios';
 const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/admin/dashboard",
+  },
 
-  { id: 'users', label: 'Users', icon: Users, href: '/admin/users' },
+  {
+    id: "users",
+    label: "Users",
+    icon: Users,
+    href: "/admin/users",
+  },
 
-  { id: 'withdrawals', label: 'Withdrawals', icon: Wallet, href: '/admin/withdraws' },
+  {
+    id: "withdrawals",
+    label: "Withdrawals",
+    icon: Wallet,
+    href: "/admin/withdraws",
+  },
 
-  { id: 'paymentProof', label: 'Payment Proof', icon: FileCheck, href: '/admin/PaymentProof' },
-  { id: 'announcements', label: 'announcements', icon: Bell, href: '/admin/announcements' },
+  {
+    id: "paymentProof",
+    label: "Payment Proof",
+    icon: FileCheck,
+    href: "/admin/PaymentProof",
+  },
 
-  { id: 'reports', label: 'Reports', icon: Flag, href: '/admin/reports' },
+  {
+    id: "announcements",
+    label: "Announcements",
+    icon: Megaphone, // Better than Bell
+    href: "/admin/announcements",
+  },
+
+ 
+
+  {
+    id: "reports",
+    label: "Reports",
+    icon: FileWarning, // cleaner than Flag
+    href: "/admin/reports",
+  },
+   {
+    id: "settings",
+    label: "Settings",
+    icon: Settings, // Proper settings icon
+    href: "/admin/settings",
+  }
 ];
-
 export default function Sidebar({ isOpen, onToggle }) {
   const { pathname } = useLocation();
   const {logout}=useLogout();

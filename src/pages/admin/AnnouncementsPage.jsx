@@ -28,6 +28,7 @@ export default function AnnouncementsPage() {
         background: ADMINCOLORS.card,
         minHeight: "100vh",
         overflow: "auto",
+        borderRadius:20
       }}
     >
       {/* Page Header */}

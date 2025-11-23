@@ -4,9 +4,11 @@ import React, { useState, useCallback } from "react";
 import SkeletonRow from "./SkeletonRow";
 import { X, ChevronUp, ChevronDown } from "lucide-react";
 import { ADMINCOLORS } from "../constant";
-import { useUsers } from "../hooks/auth/AdminMutation";
+import { useToggleSuspendUser, useUsers } from "../hooks/auth/AdminMutation";
 
 export function UsersTable() {
+const { mutate: toggleSuspendUser } = useToggleSuspendUser();
+
   const [searchParams, setSearchParams] = useState(
     new URLSearchParams(window.location.search)
   );
@@ -185,9 +187,10 @@ export function UsersTable() {
           border: `1px solid ${ADMINCOLORS.border}`,
           borderRadius: 8,
           overflow: "hidden",
+
         }}
       >
-        <table style={{ width: "100%", color: ADMINCOLORS.foreground }}>
+        <table style={{ width: "100%", color: ADMINCOLORS.foreground,overflowX:"auto" }}>
           <thead>
             <tr style={{ background:ADMINCOLORS.rowHighlight,border:ADMINCOLORS.rowHighlightBorder }}>
               {[
@@ -323,12 +326,17 @@ export function UsersTable() {
 /* ----------------- ACTION DROPDOWN ----------------- */
 function ActionMenu({ userId, isSuspended, onAction }) {
   const [open, setOpen] = useState(false);
+  const { mutate: toggleSuspendUser } = useToggleSuspendUser();
+const toggleSuspend = () => {
+  toggleSuspendUser(userId, {
+    onSuccess: () => {
+      onAction(); // Refresh list
+      setOpen(false); // Close modal (if needed)
+    },
+  });
+};
 
-  const toggleSuspend = async () => {
-    await fetch(`/api/admin/users/suspend/${userId}`, { method: "PATCH" });
-    setOpen(false);
-    onAction();
-  };
+  
 
   return (
     <div style={{ position: "relative" }}>

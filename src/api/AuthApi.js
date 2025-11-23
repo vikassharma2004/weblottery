@@ -1,10 +1,5 @@
 import { axiosInstance as axios } from "../config/axios.js";
 
-/**
- * Wrapper helpers for auth & misc API calls.
- * These return `response.data` on success and throw the axios error on failure.
- * Designed to be used with react-query / useMutation / useQuery.
- */
 
 // --- Auth ---
 export const registerUser = async (payload) => {
@@ -113,9 +108,5 @@ export const createWithdrawRequest = async ({ amount, upiId }) => {
     "/withdraw/create-withdraw-request",
     { amount, upiId }
   );
-  return data;
-};
-export const createOrderApi = async (payload) => {
-  const { data } = await axios.post("/payment/create-order", payload);
   return data;
 };

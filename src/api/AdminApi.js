@@ -83,3 +83,113 @@ export const getAllUsersService = async ({
 
   return data;
 };
+
+// annoument api
+export const getAnnouncementsService = async ({
+  status // "active" | "inactive" | "all"
+}) => {
+  let url = `/announcements?status=${status}`;
+
+  const { data } = await axios.get(url, {
+    withCredentials: true, // admin panel uses session cookies
+  });
+
+  return data;
+};
+
+// CREATE announcement (admin only)
+export const createAnnouncementApi = async (data) => {
+  const res = await axios.post("/announcements", data);
+  return res.data;
+};
+
+// UPDATE announcement
+export const updateAnnouncementApi = async ({ id, payload }) => {
+  const res = await axios.patch(`/announcements/${id}`, payload, {
+    withCredentials: true,
+  });
+  return res.data;
+};
+
+// DELETE announcement
+export const deleteAnnouncementApi = async (id) => {
+  const res = await axios.delete(`/announcements/${id}`, {
+    withCredentials: true,
+  });
+  return res.data;
+};
+
+// { payment api}
+export const getActivePaymentApi = async () => {
+  const res = await axios.get("/payment-settings/active");
+  return res.data.activePayment;
+};
+// Get all payments
+export const getAllPaymentsApi = async () => {
+  const res = await axios.get("/payment-settings");
+  return res.data.payments;
+};
+
+// Update a specific payment
+export const updatePaymentApi = async (id, payload) => {
+  const res = await axios.patch(`/payment-settings/${id}`, payload);
+  return res.data;
+};
+
+// Delete a payment
+export const deletePaymentApi = async (id) => {
+  const res = await axios.delete(`/payment-settings/${id}`);
+  return res.data;
+};
+
+//reports api
+// GET SINGLE REPORT
+export const getReportByIdApi = async (id) => {
+  const res = await axios.get(`/report/${id}`);
+  return res.data.report; // because controller returns { message, data }
+};
+
+// UPDATE REPORT STATUS
+export const updateReportStatusApi = async (id, status) => {
+  const res = await axios.put(`/report/${id}`, { status });
+  return res.data;
+};
+export const toggleSuspendUserApi = async (id) => {
+  const res = await axios.patch(`/admin/users/suspend/${id}`);
+  return res.data;
+};
+
+export const createPaymentSettingApi = async (formData) => {
+  const res = await axios.post("/payment-settings", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return res.data;
+};
+export const submitPaymentVerificationApi = async (formData) => {
+  const res = await axios.post("/payment-verification/submit", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return res.data;
+};
+export const getPendingPaymentsApi = async ({ page, limit=20, startDate, endDate }) => {
+  const params = {};
+
+  if (page) params.page = page;
+  if (limit) params.limit = limit;
+  if (startDate) params.startDate = startDate;
+  if (endDate) params.endDate = endDate;
+
+  const res = await axios.get("/payment-verification/all", { params });
+
+  return res.data;
+};
+
+export const verifyPaymentApi = async ({ id, status, adminNote }) => {
+  const payload = { status };
+  if (adminNote) payload.adminNote = adminNote;
+
+  const res = await axios.patch(`/payment-verification/${id}`, payload);
+  return res.data;
+};

@@ -12,10 +12,12 @@ import {
 import { ADMINCOLORS } from "../constant";
 import { useReports } from "../hooks/auth/AdminMutation";
 import SkeletonRow from "./SkeletonRow";
+import ReportReviewModal from "./ReportReviewModal";
 const statusOptions = ["pending", "in_progress", "resolved", "rejected"];
 // 🔥 Skeleton component
 
 export function ReportTable() {
+  const [selectedId, setSelectedId] = useState(null);
   const [searchParams, setSearchParams] = useState(
     new URLSearchParams(window.location.search)
   );
@@ -93,6 +95,7 @@ export function ReportTable() {
   };
 
   return (
+      <>
     <div>
       {/* FILTERS */}
       <div
@@ -142,7 +145,7 @@ export function ReportTable() {
                 background: ADMINCOLORS.muted,
                 color: ADMINCOLORS.sidebar,
               }}
-            >
+              >
               <X size={16} />
               Clear Filters
             </button>
@@ -163,7 +166,7 @@ export function ReportTable() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%" }}>
             <thead>
-              <tr style={{ background: ADMINCOLORS.rowHighlight}}>
+              <tr style={{ background: ADMINCOLORS.rowHighlight }}>
                 {[
                   { label: "Email", key: "email" },
                   { label: "Status", key: "status" },
@@ -232,18 +235,7 @@ export function ReportTable() {
                         }}
                       >
                         {statusIcon[r.status]}
-                        <span
-                          style={{
-                            background: badgeColor[r.status].bg,
-                            color: badgeColor[r.status].color,
-                            padding: "4px 10px",
-                            borderRadius: 9999,
-                            fontSize: 12,
-                            fontWeight: 600,
-                          }}
-                        >
-                          {r.status}
-                        </span>
+                        <span className="text-white">{r.status}</span>
                       </div>
                     </td>
                     <td style={{ padding: 16 }} className="text-white">
@@ -254,7 +246,8 @@ export function ReportTable() {
                     </td>
                     <td style={{ padding: 16 }}>
                       <button
-                      className="cursor-pointer"
+                        className="cursor-pointer"
+                        onClick={() => setSelectedId(r.id)}
                         style={{
                           padding: "6px 12px",
                           background: ADMINCOLORS.primary,
@@ -288,5 +281,9 @@ export function ReportTable() {
         </div>
       </div>
     </div>
+    {selectedId && (
+  <ReportReviewModal id={selectedId} onClose={() => setSelectedId(null)} />
+)}
+</>
   );
 }

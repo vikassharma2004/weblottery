@@ -5,7 +5,7 @@ import { getProfile } from "./api/AuthApi.js";
 import toast, { Toaster } from "react-hot-toast";
 import OnlineStatus from "./components/onlinestats.jsx";
 function App() {
-  const { hydrated, user, setUser } = useUserStore();
+  const { hydrated, user, setUser,clearAuth } = useUserStore();
 
   useEffect(() => {
   const handleOnline = () => {
@@ -38,6 +38,7 @@ function App() {
         }
       } catch (err) {
         console.warn("No active session found.");
+        clearAuth()
        
       }
     })();
