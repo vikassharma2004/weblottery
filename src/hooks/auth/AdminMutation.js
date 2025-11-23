@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { createAnnouncementApi,  createPaymentSettingApi,  deleteAnnouncementApi,  deletePaymentApi,  getActivePaymentApi,  getAllPaymentsApi,  getAllReportsService, getAllUsersService, getAllWithdrawsService, getAnalyticsService, getAnnouncementsService, getPendingPaymentsApi, getReportByIdApi, getStatsService, submitPaymentVerificationApi, toggleSuspendUserApi, updateAnnouncementApi, updatePaymentApi, updateReportStatusApi, verifyPaymentApi } from "../../api/AdminApi";
+import { apiGetWithdrawById, apiProcessWithdraw, createAnnouncementApi,  createPaymentSettingApi,  deleteAnnouncementApi,  deletePaymentApi,  getActivePaymentApi,  getAllPaymentsApi,  getAllReportsService, getAllUsersService, getAllWithdrawsService, getAnalyticsService, getAnnouncementsService, getPendingPaymentsApi, getReportByIdApi, getStatsService, submitPaymentVerificationApi, toggleSuspendUserApi, updateAnnouncementApi, updatePaymentApi, updateReportStatusApi, verifyPaymentApi } from "../../api/AdminApi";
 export const useReports = ({ page, limit, issueType, status }) => {
   return useQuery({
     queryKey: ["reports", { page, limit, issueType, status }],
@@ -285,5 +285,28 @@ export const useVerifyPayment = () => {
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Action failed");
     }
+  });
+};
+
+
+export const useWithdrawById = (id) => {
+  return useQuery({
+    queryKey: ["withdraw", id],
+    queryFn: () => apiGetWithdrawById(id),
+    enabled: !!id,
+  });
+};
+export const useProcessWithdrawRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: apiProcessWithdraw,
+    onSuccess: () => {
+      toast.success("Withdraw updated successfully");
+      queryClient.invalidateQueries(["withdraws"]); // if you have list
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    },
   });
 };

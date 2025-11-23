@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Trash2, Plus } from "lucide-react";
+import {
+  Trash2,
+  Plus,
+  Loader2,
+  XCircle,
+  CheckCircle,
+  Ban,
+  Power,
+} from "lucide-react";
 import { ADMINCOLORS } from "../constant";
 import CreatePaymentModal from "./CreatePaymentModal";
 
@@ -14,15 +22,15 @@ import SkeletonRow from "./SkeletonRow";
 
 export default function PaymentSettingsTable() {
   const [openModal, setOpenModal] = useState(false);
-
+  const [isdeleting, setisdeleting] = useState(false);
   // Fetch all payments
   const { data: payments = [], isLoading } = useGetPayments();
 
   // Update status mutation
-  const updatePayment = useUpdatePayment();
+  const { mutate: updatePayment, isPending: updating } = useUpdatePayment();
 
   // Delete payment mutation
-  const {mutate:deletePayment, isPending} = useDeletePayment();
+  const { mutate: deletePayment, isPending } = useDeletePayment();
 
   // Create payment – refetching handled inside CreatePaymentModal
   const createPayment = () => {}; // You don't need anything here
@@ -38,8 +46,10 @@ export default function PaymentSettingsTable() {
   };
 
   // Delete handler
-  const handleDelete = (id) => {
-    deletePayment(id);
+  const handleDelete = async (id) => {
+    setisdeleting(true);
+    await deletePayment(id);
+    setisdeleting(false);
   };
 
   return (
@@ -82,11 +92,11 @@ export default function PaymentSettingsTable() {
 
             <tbody>
               {isLoading ? (
-               <>
-               <SkeletonRow/>
-               <SkeletonRow/>
-               <SkeletonRow/>
-               </>
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
               ) : payments.length === 0 ? (
                 <tr>
                   <td className="p-5 text-center text-gray-400" colSpan={5}>
@@ -135,7 +145,8 @@ export default function PaymentSettingsTable() {
                     <td className="p-3 flex items-center gap-4">
                       {/* Toggle Status */}
                       <button
-                        className="px-3 py-1 rounded-lg font-semibold cursor-pointer"
+                        disabled={isPending || updating}
+                        className="px-2 py-1 rounded-lg font-semibold cursor-pointer"
                         style={{
                           background: p.isActive
                             ? "rgba(239,68,68,0.25)"
@@ -144,15 +155,24 @@ export default function PaymentSettingsTable() {
                         }}
                         onClick={() => toggleStatus(p._id, p.isActive)}
                       >
-                        {p.isActive ? "Deactivate" : "Activate"}
+                        {p.isActive ? (
+                          <Ban className="w-5 h-5 text-red-600" /> // deactivate
+                        ) : (
+                          <Power className="w-5 h-5 text-green-600" /> // activate
+                        )}
                       </button>
 
                       {/* Delete */}
                       <button
+                        disabled={isPending || updating}
                         className="text-red-400 hover:text-red-300 cursor-pointer"
                         onClick={() => handleDelete(p._id)}
                       >
-                         {isPending?<Trash2 size={18} className="animate-pulse"/>:<Trash2 size={18}/> }  
+                        {isPending ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Trash2 size={18} />
+                        )}
                       </button>
                     </td>
                   </tr>

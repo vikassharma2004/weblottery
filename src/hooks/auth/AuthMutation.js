@@ -251,12 +251,13 @@ export const usePaymentHistory = (status) => {
 // 🔥 Mark Notifications as Read
 
 export const useWithdraw = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createWithdrawRequest,
     onSuccess: (data) => {
       toast.success(data?.message || "Withdrawal request submitted!");
+      queryClient.invalidateQueries(["wallet-info"])
     },
-    invalidateQueries: ["wallet-info"],
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Withdrawal failed");
     },

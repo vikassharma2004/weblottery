@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useReportById, useUpdateReportStatus } from "../hooks/auth/AdminMutation";
+import { Loader, Loader2 } from "lucide-react";
 
 const THEME = {
   PRIMARY: "#FFB800",
@@ -71,7 +72,7 @@ export default function ReportReviewModal({ id, onClose }) {
         </div>
 
         {isLoading ? (
-          <p style={{ color: THEME.TEXT }}>Loading...</p>
+          <Loader2 className="h-6 w-6 animate-spin mx-auto mt-10" />
         ) : (
           <>
             {/* Header */}
@@ -154,6 +155,7 @@ export default function ReportReviewModal({ id, onClose }) {
                   fontWeight: 700,
                   borderRadius: 12,
                   fontSize: 16,
+                  cursor:"pointer"
                 }}
               >
                 Save

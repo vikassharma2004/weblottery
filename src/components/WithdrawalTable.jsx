@@ -9,36 +9,68 @@ import {
   XCircle,
   Clock,
   CheckCircle,
+  Eye,
+  Loader,
+  Loader2,
 } from "lucide-react";
 import { ADMINCOLORS } from "../constant";
-import { useWithdraws } from "../hooks/auth/AdminMutation";
+import {
+  useWithdraws,
+  useWithdrawById,
+  useProcessWithdrawRequest,
+} from "../hooks/auth/AdminMutation";
 
-const statusOptions = [
-  "pending",
-  "approved",
-  "Processing",
-  "completed",
-  "cancelled",
-];
+const statusOptions = ["approved", "rejected"];
 
+const statusButtonLabels = {
+  approved: "Approve Withdrawal",
+
+  cancelled: "Reject Withdrawal",
+};
 export function WithdrawalTable() {
-
   // URL PARAMS
   const [searchParams, setSearchParams] = useState(
     new URLSearchParams(window.location.search)
   );
 
-  
   const page = Number(searchParams.get("page") || 1);
   const status = searchParams.get("status") || "";
   const withdrawId = searchParams.get("withdrawId") || "";
   const email = searchParams.get("email") || "";
   const startDate = searchParams.get("startDate") || "";
   const endDate = searchParams.get("endDate") || "";
-   const [withdrawIdInput, setWithdrawIdInput] = useState(withdrawId);
+  const [withdrawIdInput, setWithdrawIdInput] = useState(withdrawId);
   const [emailInput, setEmailInput] = useState(email);
 
-// DEBOUNCE EFFECT FOR withdrawId
+  // Review modal state
+  const [selectedStatus, setSelectedStatus] = useState("");
+const [rejectReason, setRejectReason] = useState("");
+
+  const [selectedId, setSelectedId] = useState(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+
+  const { data: selectedWithdraw, isLoading: isLoadingSingle } =
+    useWithdrawById(selectedId);
+
+  const updateStatusMutation = useProcessWithdrawRequest();
+
+  const openReview = (id) => {
+    setSelectedId(id);
+    setIsReviewOpen(true);
+  };
+
+  const closeReview = () => {
+    setSelectedId(null);
+    setIsReviewOpen(false);
+  };
+
+  React.useEffect(() => {
+  if (selectedWithdraw) {
+    setSelectedStatus(selectedWithdraw.status || "");
+    setRejectReason("");
+  }
+}, [selectedWithdraw]);
+  // Debounce ID
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       updateFilter("withdrawId", withdrawIdInput);
@@ -47,7 +79,7 @@ export function WithdrawalTable() {
     return () => clearTimeout(timeout);
   }, [withdrawIdInput]);
 
-  // DEBOUNCE EFFECT FOR email
+  // Debounce email
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       updateFilter("email", emailInput);
@@ -55,14 +87,14 @@ export function WithdrawalTable() {
 
     return () => clearTimeout(timeout);
   }, [emailInput]);
-  // SORTING
+
+  // SORT
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "desc",
   });
 
-  // FETCH FROM BACKEND
-  const { data, isLoading, isFetching } = useWithdraws({
+  const { data, isLoading } = useWithdraws({
     page,
     limit: 20,
     status,
@@ -75,7 +107,6 @@ export function WithdrawalTable() {
   const withdraws = data?.withdraws || [];
   const totalPages = data?.totalPages || 1;
 
-  // UPDATE URL
   const updateURL = (params) => {
     const query = params.toString();
     window.history.replaceState(null, "", `?${query}`);
@@ -86,7 +117,7 @@ export function WithdrawalTable() {
     (key, value) => {
       const params = new URLSearchParams(searchParams);
       value ? params.set(key, value) : params.delete(key);
-      params.set("page", "1"); // whenever filter changes → reset page
+      params.set("page", "1");
       updateURL(params);
     },
     [searchParams]
@@ -96,7 +127,7 @@ export function WithdrawalTable() {
     updateURL(new URLSearchParams());
   };
 
-  // SORTING (local)
+  // SORT LOGIC
   const sorted = [...withdraws].sort((a, b) => {
     const aVal = a[sortConfig.key];
     const bVal = b[sortConfig.key];
@@ -123,25 +154,18 @@ export function WithdrawalTable() {
     }));
   };
 
-  // BADGES + ICONS
+  // BADGE + ICONS
   const statusIcon = {
     pending: <Clock size={18} style={{ color: "#FBBF24" }} />,
-    in_progress: <Clock size={18} style={{ color: "#3B82F6" }} />,
-    resolved: <CheckCircle size={18} style={{ color: "#10B981" }} />,
-    rejected: <XCircle size={18} style={{ color: ADMINCOLORS.destructive }} />,
+    Processing: <Clock size={18} style={{ color: "#3B82F6" }} />,
+    approved: <CheckCircle size={18} style={{ color: "#22C55E" }} />,
+    completed: <CheckCircle size={18} style={{ color: "#10B981" }} />,
+    cancelled: <XCircle size={18} style={{ color: ADMINCOLORS.destructive }} />,
   };
 
-  const badgeColor = {
-    pending: { bg: "#FBBF2433", color: "#FBBF24" },
-    in_progress: { bg: "#3B82F633", color: "#3B82F6" },
-    resolved: { bg: "#10B98133", color: "#10B981" },
-    rejected: { bg: "#EF444433", color: ADMINCOLORS.destructive },
-  };
-
-  
   return (
     <div>
-      {/* ================= FILTERS ================= */}
+      {/* FILTER SECTION */}
       <div
         style={{
           background: ADMINCOLORS.card,
@@ -241,7 +265,7 @@ export function WithdrawalTable() {
         </div>
       </div>
 
-      {/* ================= TABLE ================= */}
+      {/* TABLE */}
       <div
         style={{
           background: ADMINCOLORS.card,
@@ -253,7 +277,12 @@ export function WithdrawalTable() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%" }}>
             <thead>
-              <tr style={{ background:ADMINCOLORS.rowHighlight,border:ADMINCOLORS.rowHighlightBorder }}>
+              <tr
+                style={{
+                  background: ADMINCOLORS.rowHighlight,
+                  border: ADMINCOLORS.rowHighlightBorder,
+                }}
+              >
                 {[
                   { label: "Name", key: "name" },
                   { label: "Email", key: "email" },
@@ -297,156 +326,93 @@ export function WithdrawalTable() {
               </tr>
             </thead>
 
-          <tbody>
-  {isLoading ? (
-    <>
-      <SkeletonRow />
-      <SkeletonRow />
-      <SkeletonRow />
-      <SkeletonRow />
-      <SkeletonRow />
-    </>
-  ) : sorted.length > 0 ? (
-    sorted.map((req) => (
-      <tr
-        key={req._id}
-        style={{ borderBottom: `1px solid ${ADMINCOLORS.border}` }}
-      >
-        <td style={{ padding: 16 }} className="text-white">
-          {req.name}
-        </td>
+            <tbody>
+              {isLoading ? (
+                [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
+              ) : sorted.length > 0 ? (
+                sorted.map((req) => (
+                  <tr
+                    key={req._id}
+                    style={{ borderBottom: `1px solid ${ADMINCOLORS.border}` }}
+                  >
+                    <td style={{ padding: 16 }} className="text-white">
+                      {req?.user.name}
+                    </td>
 
-        <td style={{ padding: 16 }} className="text-white">
-          {req.email}
-        </td>
+                    <td style={{ padding: 16 }} className="text-white">
+                      {req?.user.email}
+                    </td>
 
-        <td style={{ padding: 16, fontWeight: 600 }} className="text-[#F1F5F9]">
-          ${req.amount}
-        </td>
+                    <td
+                      style={{ padding: 16, fontWeight: 600 }}
+                      className="text-[#F1F5F9]"
+                    >
+                      ₹{req.amount}
+                    </td>
 
-        <td style={{ padding: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            {statusIcon[req.status]}
-            <span
-              style={{
-                background: badgeColor[req.status].bg,
-                color: badgeColor[req.status].color,
-                padding: "4px 10px",
-                borderRadius: 9999,
-                fontSize: 12,
-                fontWeight: 600,
-              }}
-            >
-              {req.status}
-            </span>
-          </div>
-        </td>
+                    <td style={{ padding: 16 }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                        }}
+                      >
+                        {statusIcon[req.status]}
+                        <span style={{ color: ADMINCOLORS.foreground }}>
+                          {req.status}
+                        </span>
+                      </div>
+                    </td>
 
-        <td style={{ padding: 16 }} className="text-white">
-          {req.withdrawId}
-        </td>
+                    <td style={{ padding: 16 }} className="text-white">
+                      {req.withdrawId}
+                    </td>
 
-        <td style={{ padding: 16, color: ADMINCOLORS.muted }}>
-          {new Date(req.createdAt).toLocaleDateString()}
-        </td>
+                    <td style={{ padding: 16, color: ADMINCOLORS.muted }}>
+                      {new Date(req.createdAt).toLocaleDateString()}
+                    </td>
 
-        <td style={{ padding: 16 }}>
-          <button
-            style={{
-              padding: "6px 12px",
-              background: ADMINCOLORS.primary,
-              color: ADMINCOLORS.sidebar,
-              borderRadius: 6,
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
-            Review
-          </button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td
-        colSpan={7}
-        style={{
-          padding: 48,
-          textAlign: "center",
-          color: ADMINCOLORS.muted,
-        }}
-      >
-        No withdrawal requests found
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                    <td style={{ padding: 16 }}>
+                      <button
+                        onClick={() => openReview(req._id)}
+                        style={{
+                          padding: "6px 12px",
+                          background: ADMINCOLORS.primary,
+                          color: ADMINCOLORS.sidebar,
+                          borderRadius: 6,
+                          fontSize: 14,
+                          fontWeight: 600,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                        }}
+                      >
+                        <Eye size={16} />
+                        Review
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={7}
+                    style={{
+                      padding: 48,
+                      textAlign: "center",
+                      color: ADMINCOLORS.muted,
+                    }}
+                  >
+                    No withdrawal requests found
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
         </div>
-        {/* ================= SUMMARY BOXES ================= */}
-        <div
-          style={{
-            marginTop: 24,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 16,
-          }}
-        >
-          {/* Total Requests */}
-          <div
-            style={{
-              background: ADMINCOLORS.card,
-              border: `1px solid ${ADMINCOLORS.border}`,
-              padding: 20,
-              borderRadius: 8,
-            }}
-          >
-            <p style={{ fontSize: 14, color: ADMINCOLORS.muted }}>
-              Total Requests
-            </p>
-            <h2
-              style={{
-                fontSize: 32,
-                fontWeight: 700,
-                color: ADMINCOLORS.foreground,
-                marginTop: 4,
-              }}
-            >
-              {data?.total || 0}
-            </h2>
-          </div>
 
-          {/* Total Withdraw Amount */}
-          <div
-            style={{
-              background: ADMINCOLORS.card,
-              border: `1px solid ${ADMINCOLORS.border}`,
-              padding: 20,
-              borderRadius: 8,
-            }}
-          >
-            <p style={{ fontSize: 14, color: ADMINCOLORS.muted }}>
-              Total Withdraw Amount
-            </p>
-            <h2
-              style={{
-                fontSize: 32,
-                fontWeight: 700,
-                color: ADMINCOLORS.primary,
-                marginTop: 4,
-              }}
-            >
-              ₹
-              {withdraws
-                .filter((w) => w.status === "pending")
-                .reduce((sum, w) => sum + (w.amount || 0), 0)
-                .toLocaleString()}
-            </h2>
-          </div>
-        </div>
-
-        {/* ================= PAGINATION ================= */}
+        {/* PAGINATION */}
         <div
           style={{
             padding: 16,
@@ -498,6 +464,163 @@ export function WithdrawalTable() {
           </button>
         </div>
       </div>
+
+      {/* ====================== REVIEW MODAL ====================== */}
+     {/* ====================== REVIEW MODAL ====================== */}
+{isReviewOpen && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.6)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    }}
+  >
+    <div
+      style={{
+        width: "450px",
+        background: ADMINCOLORS.card,
+        padding: 24,
+        borderRadius: 12,
+        border: `1px solid ${ADMINCOLORS.border}`,
+      }}
+    >
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold" style={{ color: "white" }}>
+          Review Withdrawal
+        </h2>
+        <button onClick={closeReview}>
+          <X size={20} style={{ color: "white", cursor: "pointer" }} />
+        </button>
+      </div>
+
+      {/* LOADING */}
+      {isLoadingSingle ? (
+        <Loader2 className="w-5 h-5 animate-spin text-white" />
+      ) : !selectedWithdraw ? (
+        <p style={{ color: "white" }}>No data found</p>
+      ) : (
+        <>
+          {/* USER */}
+          <div style={{ marginBottom: 16 }}>
+            <p style={{ color: "#9CA3AF" }}>User</p>
+            <p style={{ color: "white", fontWeight: 600 }}>
+              {selectedWithdraw.requestedBy?.name} (
+              {selectedWithdraw.requestedBy?.email})
+            </p>
+          </div>
+
+          {/* AMOUNT */}
+          <div style={{ marginBottom: 16 }}>
+            <p style={{ color: "#9CA3AF" }}>Amount</p>
+            <p style={{ color: "white", fontWeight: 600 }}>
+              ₹{selectedWithdraw.amount}
+            </p>
+          </div>
+
+          {/* WITHDRAW ID */}
+          <div style={{ marginBottom: 16 }}>
+            <p style={{ color: "#9CA3AF" }}>Withdraw ID</p>
+            <p style={{ color: "white" }}>{selectedWithdraw.withdrawId}</p>
+          </div>
+
+          {/* STATUS SELECT */}
+          <div style={{ marginBottom: 16 }}>
+            <p style={{ color: "#9CA3AF" }}>Status</p>
+
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg"
+              style={{
+                background: ADMINCOLORS.accent,
+                border: `1px solid ${ADMINCOLORS.border}`,
+                color: ADMINCOLORS.foreground,
+              }}
+            >
+              <option value="">Select status</option>
+              {statusOptions.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* SHOW REASON INPUT WHEN REJECTED */}
+          {selectedStatus === "rejected" && (
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ color: "#9CA3AF" }}>Reason</p>
+              <textarea
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                placeholder="Enter reason for rejection"
+                rows={4}
+                className="w-full px-3 py-2 rounded-lg"
+                style={{
+                  background: ADMINCOLORS.accent,
+                  border: `1px solid ${ADMINCOLORS.border}`,
+                  color: ADMINCOLORS.foreground,
+                }}
+              />
+            </div>
+          )}
+
+          {/* UPDATE BUTTON */}
+          <button
+            onClick={() => {
+              if (!selectedStatus) return alert("Select a status first.");
+
+              if (selectedStatus === "rejected" && !rejectReason.trim()) {
+                return alert("Rejection reason is required.");
+              }
+
+              updateStatusMutation.mutate({
+                id: selectedId,
+                status: selectedStatus,
+                note: rejectReason || null,
+              });
+              closeReview();
+            }}
+            className="w-full mt-2 py-2 rounded-lg"
+            style={{
+              background: ADMINCOLORS.primary,
+              color: ADMINCOLORS.sidebar,
+              fontWeight: 600,
+              cursor: "pointer",
+              opacity: updateStatusMutation.isPending ? 0.7 : 1,
+            }}
+            disabled={updateStatusMutation.isPending}
+          >
+            {updateStatusMutation.isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin mx-auto" />
+            ) : (
+              statusButtonLabels[selectedStatus] || "Update Status"
+            )}
+          </button>
+
+          {/* CLOSE */}
+          <button
+            onClick={closeReview}
+            className="w-full mt-4 py-2 rounded-lg"
+            style={{
+              background: ADMINCOLORS.accent,
+              color: ADMINCOLORS.sidebar,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            Close
+          </button>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

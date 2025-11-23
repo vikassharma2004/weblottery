@@ -6,6 +6,7 @@ import {
   ArrowUpCircle,
   Users,
   Info,
+  Loader2,
 } from "lucide-react";
 
 export default function NotificationDropdown({ onClose }) {
@@ -77,7 +78,7 @@ export default function NotificationDropdown({ onClose }) {
       </div>
 
       {notificationsQuery.isLoading ? (
-        <p className="text-stone-500 text-sm">Loading...</p>
+        <Loader2 className="h-5 w-5 animate-spin"/>
       ) : notifications.length === 0 ? (
         <p className="text-stone-500 text-sm text-center py-4">No notifications found</p>
       ) : (

@@ -193,3 +193,15 @@ export const verifyPaymentApi = async ({ id, status, adminNote }) => {
   const res = await axios.patch(`/payment-verification/${id}`, payload);
   return res.data;
 };
+
+export const apiGetWithdrawById = async (id) => {
+  const res = await axios.get(`/withdraw/${id}`);
+  return res.data?.withdraw;
+};
+export const apiProcessWithdraw = async ({ id, status, note }) => {
+  const res = await axios.patch(`/withdraw/${id}/update`, {
+    status,
+    note,
+  });
+  return res.data;
+};

@@ -160,7 +160,7 @@ const Login = () => {
           {isPending ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Logging in...
+            
             </>
           ) : (
             <>

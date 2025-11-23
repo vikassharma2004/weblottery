@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useCallback } from "react";
-import { ChevronDown, ChevronUp, Eye, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Eye, Loader2, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { ADMINCOLORS } from "../constant";
 import SkeletonRow from "./SkeletonRow";
@@ -146,7 +146,7 @@ export function PaymentProofTable() {
       </div>
 
       {/* TABLE */}
-      <div className="bg-[#1F1F1F] border border-[#333] rounded-lg overflow-hidden">
+      <div className="bg-[#1F1F1F] border border-[#333] rounded-lg overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr style={{ background: ADMINCOLORS.rowHighlight }}>
@@ -263,7 +263,9 @@ export function PaymentProofTable() {
             updateURL(params);
           }}
           className={`px-4 py-2 rounded-lg ${
-            page >= totalPages ? "bg-gray-500 cursor-not-allowed" : "bg-[#F5B041]"
+            page >= totalPages
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-[#F5B041]"
           }`}
         >
           Next
@@ -313,7 +315,7 @@ function PaymentModal({ proof, onClose }) {
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[9999] p-4"
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-999 p-4"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -323,11 +325,11 @@ function PaymentModal({ proof, onClose }) {
           Payment Proof
         </div>
 
-        <div className="p-5 overflow-y-auto flex-1 space-y-4">
+        <div className="p-3 overflow-y-auto flex-1 space-y-3">
           <img
             src={proof.proofImageUrl}
             alt="Proof"
-            className="w-full max-h-[300px] object-contain rounded-md"
+            className="w-full max-h-[500px] object-contain rounded-md"
           />
 
           {/* Status Select */}
@@ -354,7 +356,7 @@ function PaymentModal({ proof, onClose }) {
         <div className="p-4 border-t border-[#333] flex gap-3">
           <button
             onClick={onClose}
-            className="w-1/2 py-2.5 bg-red-500 text-white rounded-lg font-semibold"
+            className="w-1/2 py-2.5 bg-red-500 text-white rounded-lg font-semibold cursor-pointer"
           >
             Close
           </button>
@@ -368,11 +370,13 @@ function PaymentModal({ proof, onClose }) {
                 : "bg-[#F5B041] cursor-pointer"
             }`}
           >
-            {isPending
-              ? "Processing..."
-              : status === "approved"
-              ? "Approve"
-              : "Reject"}
+            {isPending ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : status === "approved" ? (
+              "Approve"
+            ) : (
+              "Reject"
+            )}
           </button>
         </div>
       </div>

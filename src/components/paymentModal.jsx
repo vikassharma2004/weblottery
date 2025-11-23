@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Upload } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import { useActivePayment, useSubmitPaymentVerification } from "../hooks/auth/AdminMutation";
 import { uploadToCloudinary } from "../hooks/auth/uploadimage";
@@ -202,7 +202,7 @@ export function PaymentModal({ amount, onClose }) {
             className={`w-full mt-8 h-12 rounded-lg font-semibold text-stone-900 bg-gradient-to-r from-amber-400 to-amber-500 shadow-md 
               ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
-            {isPending ? "Submitting..." : "Submit Payment Proof"}
+            {isPending ?  <Loader2 className="w-5 h-5 animate-spin" /> : "Submit Payment Proof"}
           </button>
         )}
       </div>
