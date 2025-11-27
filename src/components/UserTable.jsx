@@ -186,7 +186,8 @@ const { mutate: toggleSuspendUser } = useToggleSuspendUser();
           background: ADMINCOLORS.card,
           border: `1px solid ${ADMINCOLORS.border}`,
           borderRadius: 8,
-          overflow: "hidden",
+          overflowX: "auto",
+
 
         }}
       >

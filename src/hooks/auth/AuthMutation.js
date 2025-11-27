@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+// import { toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import {
   registerUser,
   loginUser,
@@ -19,6 +20,7 @@ import {
   createWithdrawRequest,
   getProfile,
   getNotifications,
+  apiVerifyToken,
 
 } from "../../api/AuthApi";
 
@@ -73,7 +75,7 @@ export const useLogin = () => {
         toast.error("Email not verified. Please verify first.");
 
         navigate("/auth/verify-otp", {
-          state: { 
+          state: {
             email: res?.email,     // backend must return this
             action: "verifyEmail",
           },
@@ -84,9 +86,8 @@ export const useLogin = () => {
 
       // CASE 2 → Successful login
       if (res?.user) {
-        setUser(res?.token,res.user);
-        toast.success("Login successful!")
-
+        setUser(res?.token, res.user);
+        toast.success("login succesfull")
         // role-based routing
         if (res.user?.role === "admin") {
           navigate("/admin/dashboard");
@@ -119,18 +120,43 @@ export const useLogin = () => {
   });
 };
 
+export const useVerifyAuthToken = ({ clearAuth }) => {
+  return useMutation({
+    mutationFn: apiVerifyToken,
+
+    onSuccess: (data) => {
+      return data; // token valid
+    },
+
+    onError: (error) => {
+      const status = error?.response?.status;
+      toast.error("session expired")
+      // 🔥 Universal rule:
+      // Any 401 or 403 → auth is trash → wipe and logout
+      if (status === 401 || status === 403) {
+        clearAuth();  // clear redux/zustand/localStorage
+        logout();     // redirect to login
+        return;
+      }
+
+      // Anything else is still shady → treat as auth failure
+      clearAuth();
+      logoutUser();
+    },
+  });
+};
 
 
 
 // 🔥 Logout
-export const useLogout = async() => {
+export const useLogout = async () => {
   const logout = useUserStore((s) => s.clearAuth);
 
-  return useMutation ({
+  return useMutation({
     mutationFn: logoutUser,
 
 
-    onSuccess:async () => {
+    onSuccess: async () => {
       await logout();
       toast.success("Logged out successfully");
     },
@@ -169,10 +195,10 @@ export const useResetPassword = () => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: resetPassword,
-    onSuccess: (data) =>{
+    onSuccess: (data) => {
 
       toast.success(data?.message || "Password reset successful"),
-      navigate("/auth/login")
+        navigate("/auth/login")
     },
     onError: (err) =>
       toast.error(err?.response?.data?.message || "Reset failed"),
@@ -268,20 +294,20 @@ export const useProfile = () => {
     queryKey: ["profile"],
     queryFn: getProfile,
     staleTime: 5 * 60 * 1000, // 5 min cache (optional)
-     retry: 1,
+    retry: 1,
   });
 };
-export const useNotifications = (enabled = true) => {
+export const useNotifications = (shouldFetch = false) => {
 
   const notificationsQuery = useQuery({
     queryKey: ["notifications"],
     queryFn: getNotifications,
-    enabled,
-    staleTime: 1000 * 60 * 2,
+    enabled: shouldFetch,
+
   });
 
   const markReadMutation = useMutation({
-    mutationFn:markAllAsRead,
+    mutationFn: markAllAsRead,
     onSuccess: () => {
       // instantly update UI without refetching
       notificationsQuery.refetch();

@@ -6,6 +6,15 @@ export const registerUser = async (payload) => {
   const { data } = await axios.post("/auth/register", payload);
   return data;
 };
+export const apiVerifyToken = async () => {
+  const res = await axios.post(
+    "/auth/verify-token",
+    {},
+    { withCredentials: true }
+  );
+  return res.data;
+};
+
 
 export const changePassword = async (payload) => {
   // payload: { oldPassword, newPassword } or as your backend expects
@@ -110,3 +119,4 @@ export const createWithdrawRequest = async ({ amount, upiId }) => {
   );
   return data;
 };
+

@@ -4,7 +4,7 @@ import { authImages } from "../../image";
 import { useUserStore } from "../../store/AuthStrore";
 import { useReferralSummary } from "../../hooks/auth/AuthMutation";
 import { PaymentModal } from "../../components/paymentModal";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const front = import.meta.env.VITE_API_FRONTEND_URL;
 
@@ -59,7 +59,8 @@ export default function ReferEarnPage() {
               <Users className="w-5 h-5 text-emerald-700" />
             </div>
             <span className="text-base md:text-lg font-semibold text-emerald-700 text-center whitespace-nowrap">
-              Till now, <span className="font-bold">3+ users</span> have trusted
+              Till now, <span className="font-bold">{info.totalUsers
+}</span> + have trusted
               us
             </span>
           </div>
@@ -130,7 +131,7 @@ export default function ReferEarnPage() {
             {/* Buttons */}
             <div className="flex flex-col gap-3 pt-4">
               {info.hasPaid ? (
-                <button className="h-12 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-stone-900 font-semibold text-base rounded-lg shadow-md flex items-center justify-center transition-all">
+                <button  onClick={handleCopy}   className="h-12 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-stone-900 font-semibold text-base rounded-lg shadow-md flex items-center justify-center transition-all">
                   Refer a Friend
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </button>

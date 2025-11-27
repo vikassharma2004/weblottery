@@ -3,7 +3,7 @@ import { User, Mail, Phone, Users, Wallet, Loader2 } from "lucide-react";
 import { useUserStore } from "../../store/AuthStrore";
 import { useProfile } from "../../hooks/auth/AuthMutation";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
   const navigate = useNavigate();

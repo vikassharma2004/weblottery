@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Lock, Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-toastify";
 import { COLORS } from "../../constant";
 import { useChangePassword } from "../../hooks/auth/AuthMutation";
+import { Link } from "react-router-dom";
 
 const ChangePassword = () => {
   const [show, setShow] = useState({
@@ -35,7 +36,8 @@ const ChangePassword = () => {
       toast.error("New passwords do not match!");
       return;
     }
-    if(formData.newPassword?.length<6){
+
+    if (formData.newPassword.length < 6) {
       toast.error("Password must be at least 6 characters long.");
       return;
     }
@@ -100,10 +102,15 @@ const ChangePassword = () => {
     </div>
   );
 
+  // Disable button if any field is empty OR loading
+  const isSubmitDisabled =
+    isPending ||
+    !formData.oldPassword ||
+    !formData.newPassword ||
+    !formData.confirmPassword;
+
   return (
     <div className="w-full space-y-6">
-      <Toaster position="top-center" />
-
       {/* Header */}
       <div className="text-center select-none">
         <h1 className="text-3xl font-bold mb-2" style={{ color: COLORS.TEXT }}>
@@ -123,9 +130,9 @@ const ChangePassword = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isSubmitDisabled}
           className={`w-full flex items-center justify-center gap-2 py-3 font-semibold rounded-xl shadow-md transition-all duration-200 ${
-            isPending ? "opacity-80 cursor-not-allowed" : "hover:scale-[1.02]"
+            isSubmitDisabled ? "opacity-60 cursor-not-allowed" : "hover:scale-[1.02]"
           }`}
           style={{
             backgroundImage: COLORS.PRIMARY_GRADIENT,
@@ -134,10 +141,7 @@ const ChangePassword = () => {
           }}
         >
           {isPending ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Updating...
-            </>
+            <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             <>
               Update Password
@@ -146,6 +150,17 @@ const ChangePassword = () => {
           )}
         </button>
       </form>
+
+      {/* Forgot Password */}
+      <div className="text-center mt-1">
+        <Link
+          to="/auth/forgot-password"
+          className="text-sm font-semibold hover:underline"
+          style={{ color: COLORS.ACCENT }}
+        >
+          Forgot Password?
+        </Link>
+      </div>
 
       {/* Bottom Tip */}
       <div
@@ -158,6 +173,8 @@ const ChangePassword = () => {
       >
         💡 Use a strong password with at least 6 characters, including numbers & symbols.
       </div>
+
+     
     </div>
   );
 };

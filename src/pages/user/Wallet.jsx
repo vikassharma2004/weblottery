@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Wallet, ArrowDownCircle, ArrowUpCircle, Info ,Loader2} from "lucide-react";
 import { useWalletInfo, useWithdraw } from "../../hooks/auth/AuthMutation";
 import { useUserStore } from "../../store/AuthStrore";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+
 
 export default function WalletPage() {
   const { user } = useUserStore();
@@ -38,7 +39,7 @@ export default function WalletPage() {
   const transactions = wallet?.recentTransactions || [];
 
   const totalEarnings = transactions
-    .filter((t) => t.type === "withdrawal")
+    .filter((t) => t.type === "withdrawal" && t.status === "completed")
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
@@ -181,7 +182,7 @@ export default function WalletPage() {
             className={`ml-1 px-2 py-0.5 text-xs rounded-full ${
               t.status === "pending"
                 ? "bg-yellow-100 text-yellow-700"
-                : t.status === "approved"
+                : t.status === "completed"
                 ? "bg-emerald-100 text-emerald-700"
                 : "bg-red-100 text-red-700"
             }`}
@@ -243,7 +244,7 @@ export default function WalletPage() {
 =========================================================== */
 
 function WithdrawModal({ balance, onClose }) {
-  const [amount, setAmount] = React.useState("");
+  const [amount, setAmount] = React.useState(0);
   const [upi, setUpi] = React.useState("");
   const { mutate: withdraw, isPending } = useWithdraw();
 

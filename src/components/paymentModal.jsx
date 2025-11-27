@@ -2,12 +2,16 @@
 
 import React, { useState } from "react";
 import { Loader2, Upload } from "lucide-react";
-import toast from "react-hot-toast";
-import { useActivePayment, useSubmitPaymentVerification } from "../hooks/auth/AdminMutation";
+import { toast } from "react-toastify";
+import {
+  useActivePayment,
+  useSubmitPaymentVerification,
+} from "../hooks/auth/AdminMutation";
 import { uploadToCloudinary } from "../hooks/auth/uploadimage";
 export function PaymentModal({ amount, onClose }) {
   const { data: payment, isLoading } = useActivePayment();
-  const { mutateAsync: submitVerification, isPending } = useSubmitPaymentVerification();
+  const { mutateAsync: submitVerification, isPending } =
+    useSubmitPaymentVerification();
 
   // Local state
   const [proofFile, setProofFile] = useState(null);
@@ -75,7 +79,6 @@ export function PaymentModal({ amount, onClose }) {
 
       {/* Scrollable wrapper */}
       <div className="relative bg-white w-[95%] max-w-xl rounded-2xl shadow-xl p-8 mt-10 mb-10 max-h-[90vh] overflow-y-auto">
-        
         {/* Close button */}
         <button
           onClick={onClose}
@@ -172,9 +175,15 @@ export function PaymentModal({ amount, onClose }) {
             disabled={uploading}
             onClick={handleUploadToCloudinary}
             className={`w-full mt-4 h-12 rounded-lg font-semibold bg-amber-500 text-stone-900 
-              ${uploading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              ${
+                uploading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
           >
-            {uploading ? "Uploading..." : "Upload to Cloudinary"}
+            {uploading ? (
+              <Loader2 size={20} className=" w-5 h-5 animate-spin" />
+            ) : (
+              "Upload"
+            )}
           </button>
         )}
 
@@ -199,10 +208,16 @@ export function PaymentModal({ amount, onClose }) {
           <button
             disabled={isPending}
             onClick={handleSubmit}
-            className={`w-full mt-8 h-12 rounded-lg font-semibold text-stone-900 bg-gradient-to-r from-amber-400 to-amber-500 shadow-md 
-              ${isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+            className={`w-full mt-8 h-12 rounded-lg font-semibold text-stone-900 bg-linear-to-r from-amber-400 to-amber-500 shadow-md 
+              ${
+                isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
           >
-            {isPending ?  <Loader2 className="w-5 h-5 animate-spin" /> : "Submit Payment Proof"}
+            {isPending ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              "Submit Payment Proof"
+            )}
           </button>
         )}
       </div>

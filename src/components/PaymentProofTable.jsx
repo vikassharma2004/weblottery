@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import { ChevronDown, ChevronUp, Eye, Loader2, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import { ADMINCOLORS } from "../constant";
 import SkeletonRow from "./SkeletonRow";
 
@@ -288,7 +288,6 @@ export function PaymentProofTable() {
 ------------------------ */
 function PaymentModal({ proof, onClose }) {
   const { mutate: verifyPayment, isPending } = useVerifyPayment();
-
   const [status, setStatus] = useState("approved");
   const [adminNote, setAdminNote] = useState("");
 
@@ -305,7 +304,6 @@ function PaymentModal({ proof, onClose }) {
       },
       {
         onSuccess: () => {
-          toast.success("Payment updated");
           onClose();
         },
       }
@@ -371,7 +369,7 @@ function PaymentModal({ proof, onClose }) {
             }`}
           >
             {isPending ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin items-center" />
             ) : status === "approved" ? (
               "Approve"
             ) : (

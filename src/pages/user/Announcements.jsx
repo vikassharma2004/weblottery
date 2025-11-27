@@ -25,8 +25,15 @@ export default function Announcement() {
 
   return (
     <main className="min-h-screen bg-linear-to-b from-slate-50 to-slate-100">
-      {/* Banner */}
-      {banner && <BannerSection announcement={banner} />}
+      {isLoading ? (
+        <div className="w-full flex justify-center items-center mx-auto">
+          <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 w-full">
+            <div className="h-40 rounded-lg bg-slate-300 animate-pulse"></div>
+          </div>
+        </div>
+      ) : banner ? (
+        <BannerSection announcement={banner} />
+      ) : null}
 
       <section className="px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
@@ -45,7 +52,7 @@ export default function Announcement() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="h-32 rounded-lg bg-slate-200 animate-pulse"
+                  className="h-32 rounded-lg bg-slate-300 animate-pulse"
                 ></div>
               ))}
             </div>

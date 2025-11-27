@@ -17,9 +17,11 @@ export const authRoutes = [
   {
     path: "/auth/login",
     element: (
+        <UserLayout>
        <AuthLayout src={authImages.login}>
         <Login />
       </AuthLayout>
+        </UserLayout>
     ),
   },
   {

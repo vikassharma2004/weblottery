@@ -22,13 +22,16 @@ import { useNotifications } from "../../hooks/auth/AuthMutation";
 export default function UserNavbar() {
   const navigate = useNavigate();
   const { clearAuth, user } = useUserStore();
-  const { unreadCount } = useNotifications(true);
+
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
   const isLoggedIn = Boolean(user);
+  
+// Only fetch notifications when logged in
+const { unreadCount } = useNotifications(isLoggedIn);
 
   const handleLogout = async () => {
     const data = await logoutUser();
@@ -196,7 +199,7 @@ export default function UserNavbar() {
             ) : (
               <button
                 onClick={() => navigate("/auth/login")}
-                className="px-4 py-2 bg-black text-white rounded-lg"
+                className="px-4 py-2 bg-yellow-500 text-black rounded-lg cursor-pointer"
               >
                 Login
               </button>

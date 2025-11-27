@@ -80,9 +80,7 @@ export default function AnnouncementCard({ announcement }) {
             })}
           </p>
 
-          <button className={`text-sm font-medium hover:opacity-80 ${config.iconColor}`}>
-            Read more →
-          </button>
+         
         </div>
       </div>
     </div>

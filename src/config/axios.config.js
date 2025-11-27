@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axios";
 import { useUserStore } from "../store/AuthStrore";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 // Prevent infinite logout loops
 let isLoggingOut = false;

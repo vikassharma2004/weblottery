@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useGenerateOtp,useVerifyOtp } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
@@ -168,7 +168,7 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
             color: COLORS.WHITE,
           }}
         >
-          Verify OTP
+        {isVerifyingOtp? <Loader2 className="w-5 h-5 animate-spin"/>: "Verify OTP"}
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>

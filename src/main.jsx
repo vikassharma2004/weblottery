@@ -5,17 +5,17 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { QueryProvider } from "./providers/QueryProvider.jsx";
-
+import { ToastContainer, toast } from "react-toastify";
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <QueryProvider>
       <App />
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{
-          duration: 2000, // 2 seconds
-        }}
+         <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        pauseOnHover
+        theme="colored"
       />
     </QueryProvider>
   </BrowserRouter>

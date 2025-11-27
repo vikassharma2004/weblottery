@@ -148,7 +148,7 @@ export default function SupportPage() {
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Submitting...
+             
               </>
             ) : (
               "Submit Report"

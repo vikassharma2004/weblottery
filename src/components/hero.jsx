@@ -1,10 +1,10 @@
-
 import { COLORS } from "../constant";
 import { authImages } from "../image";
 import { useNavigate } from "react-router-dom";
-
+import { useUserStore } from "../store/AuthStrore";
 export function HeroSection() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { user } = useUserStore();
 
   return (
     <section
@@ -12,7 +12,6 @@ export function HeroSection() {
       style={{ backgroundColor: COLORS.BACKGROUND }}
     >
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
         {/* LEFT: TEXT CONTENT */}
         <div className="text-center md:text-left">
           <h1
@@ -26,24 +25,26 @@ export function HeroSection() {
             className="text-base md:text-lg max-w-md md:max-w-lg leading-relaxed mx-auto md:mx-0 mb-8"
             style={{ color: COLORS.TEXT_SECONDARY }}
           >
-            Verify your account, make your first payment, unlock your referral code, 
-            and earn 
+            Verify your account, make your first payment, unlock your referral
+            code, and earn
             <span className="font-semibold" style={{ color: COLORS.SECONDARY }}>
-              {" "}₹100 per referral
+              {" "}
+              ₹100 per referral
             </span>
             . Start building your earnings today.
           </p>
-
-       <button
-  onClick={() => navigate("/auth/register")}
-  className="px-8 py-3 rounded-xl font-semibold shadow-lg transition-transform hover:scale-[1.03] cursor-pointer"
-  style={{
-    backgroundImage: COLORS.PRIMARY_GRADIENT,
-    color: COLORS.BLACK,
-  }}
->
-  Get Started
-</button>
+          {!user && (
+  <button
+    onClick={() => navigate("/auth/register")}
+    className="px-8 py-3 rounded-xl font-semibold shadow-lg transition-transform hover:scale-[1.03] cursor-pointer"
+    style={{
+      backgroundImage: COLORS.PRIMARY_GRADIENT,
+      color: COLORS.BLACK,
+    }}
+  >
+    Get Started
+  </button>
+)}
 
         </div>
 

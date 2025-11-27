@@ -9,11 +9,10 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (!email.trim()) return toast.error("Please enter your email address.");
-    sendResetToken({ email });
-    setEmail("")
+   await sendResetToken({ email });
   };
 
   return (
@@ -89,7 +88,7 @@ const ForgotPassword = () => {
           {isPending? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Sending...
+             
             </>
           ) : (
             <>
