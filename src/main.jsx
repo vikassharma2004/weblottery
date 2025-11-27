@@ -11,11 +11,11 @@ createRoot(document.getElementById("root")).render(
     <QueryProvider>
       <App />
          <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={2000}
         hideProgressBar={false}
         pauseOnHover
-        theme="colored"
+      theme="colored"
       />
     </QueryProvider>
   </BrowserRouter>

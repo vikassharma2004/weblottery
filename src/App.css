@@ -1,2 +1,19 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+/* Reduce toast size */
+.Toastify__toast {
+  padding: 6px !important;
+  min-height: 30px !important;
+  font-size: 0.8rem !important;
+}
+
+/* Smaller icon */
+.Toastify__toast-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Smaller close button */
+.Toastify__close-button {
+  font-size: 0.7rem !important;
+}
