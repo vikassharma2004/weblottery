@@ -197,8 +197,7 @@ export const useResetPassword = () => {
     mutationFn: resetPassword,
     onSuccess: (data) => {
 
-      toast.success(data?.message || "Password reset successful"),
-        navigate("/auth/login")
+      toast.success(data?.message || "Password reset successful")
     },
     onError: (err) =>
       toast.error(err?.response?.data?.message || "Reset failed"),

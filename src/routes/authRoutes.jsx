@@ -12,16 +12,15 @@ import FAQSection from "../FAQSection.jsx";
 import UserLayout from "../layouts/UserLayout.jsx";
 import SupportPage from "../pages/auth/Support.jsx";
 import ProtectedRoute from "../ProctedRoute.jsx";
-import PaymentSuccess from "../pages/auth/PaymentSuccess.jsx";
 export const authRoutes = [
   {
     path: "/auth/login",
     element: (
-        <UserLayout>
-       <AuthLayout src={authImages.login}>
-        <Login />
-      </AuthLayout>
-        </UserLayout>
+      <UserLayout>
+        <AuthLayout src={authImages.login}>
+          <Login />
+        </AuthLayout>
+      </UserLayout>
     ),
   },
   {
@@ -33,9 +32,9 @@ export const authRoutes = [
     ),
   },
   {
-  path: "/ref/:referralCode",
-  element: <ReferralRedirect />,
-},
+    path: "/ref/:referralCode",
+    element: <ReferralRedirect />,
+  },
   {
     path: "/auth/forgot-password",
     element: (
@@ -47,43 +46,42 @@ export const authRoutes = [
   {
     path: "/auth/reset-password/:token",
     element: (
-      <AuthLayout src={authImages.reset}>
-        <ResetPassword />
-      </AuthLayout>
-    ),
-  },
- {
-  path: "/profile/change-password",
-  element: (
-    <ProtectedRoute allowedRoles={["user","admin"]}>
       <UserLayout>
-        <AuthLayout src={authImages.change}>
-          <ChangePassword />
+        <AuthLayout src={authImages.reset}>
+          <ResetPassword />
         </AuthLayout>
       </UserLayout>
-    </ProtectedRoute>
-  ),
-},
+    ),
+  },
+  {
+    path: "/profile/change-password",
+    element: (
+      <ProtectedRoute allowedRoles={["user", "admin"]}>
+        <UserLayout>
+          <AuthLayout src={authImages.change}>
+            <ChangePassword />
+          </AuthLayout>
+        </UserLayout>
+      </ProtectedRoute>
+    ),
+  },
   {
     path: "/auth/verify-otp",
     element: (
+
       <AuthLayout src={authImages.otp}>
         <VerifyOtp />
       </AuthLayout>
     ),
   },
-  {
-  path: "/payment-success",
-  element: <PaymentSuccess/>,
-},
+  
   {
     path: "/support",
     element: (
       <UserLayout>
-
-      <AuthLayout src={authImages.support}>
-        <SupportPage/>
-      </AuthLayout>
+        <AuthLayout src={authImages.support}>
+          <SupportPage />
+        </AuthLayout>
       </UserLayout>
     ),
   },
@@ -91,18 +89,16 @@ export const authRoutes = [
     path: "/faq",
     element: (
       <UserLayout>
-
-      <FAQSection/>
+        <FAQSection />
       </UserLayout>
     ),
   },
   {
     path: "/terms",
     element: (
-     <UserLayout>
-
-    <TermsAndConditions/>      
-     </UserLayout>
+      <UserLayout>
+        <TermsAndConditions />
+      </UserLayout>
     ),
   },
 ];
