@@ -52,7 +52,7 @@ export default function AnnouncementCard({ announcement }) {
     <div
       className={`overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${config.bg} ${config.border}`}
     >
-      <div className="p-5 sm:p-6">
+      <div className="p-10 sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex gap-3">
             <Icon className={`h-6 w-6 ${config.iconColor}`} />

@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { Mail, Lock, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useLogin } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
 import { getClientDeviceInfo } from "../../hooks/auth/deviceinfo";
+import { useUserStore } from "../../store/AuthStrore";
 const Login = () => {
   const { isPending, mutateAsync: login } = useLogin();
-
+  const { user } = useUserStore();
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  if (user && user.role === "admin") {
+  navigate("/admin/dashboard");
+} else if (user && user.role === "user") {
+  navigate("/dashboard");
+}
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,7 +40,7 @@ const Login = () => {
     login({
       email: formData.email,
       password: formData.password,
-      deviceInfo: getClientDeviceInfo()
+      deviceInfo: getClientDeviceInfo(),
     });
   };
 
@@ -160,7 +168,6 @@ const Login = () => {
           {isPending ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-            
             </>
           ) : (
             <>

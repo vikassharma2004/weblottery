@@ -46,11 +46,11 @@ export const authRoutes = [
   {
     path: "/auth/reset-password/:token",
     element: (
-      <UserLayout>
+    
         <AuthLayout src={authImages.reset}>
           <ResetPassword />
         </AuthLayout>
-      </UserLayout>
+    
     ),
   },
   {

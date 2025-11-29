@@ -44,7 +44,7 @@ export default function CreatePaymentModal({ onClose }) {
       style={{ background: "rgba(0,0,0,0.5)" }}
     >
       <div
-        className="p-6 rounded-xl w-[400px]"
+        className="p-6 rounded-xl w-[350px]"
         style={{ background: ADMINCOLORS.card }}
       >
         <h2 className="text-xl font-semibold text-white mb-4">

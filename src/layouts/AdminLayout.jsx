@@ -22,7 +22,7 @@ export default function AdminLayout({ children }) {
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto ">
-          <div className="md:p-2 lg:p-1 rounded-xl">{children}</div>
+          <div className=" p-1 md:p-2 lg:p-1 rounded-xl">{children}</div>
         </main>
       </div>
     </div>

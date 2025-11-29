@@ -21,51 +21,52 @@ export default function NotificationDropdown({ onClose }) {
   }, [notifications.length]);
 
   const getNotificationStyle = (type) => {
-    switch (type) {
-      case "withdraw":
-        return {
-          icon: <ArrowUpCircle className="w-5 h-5 text-red-500" />,
-          bg: "bg-red-50",
-          border: "border-red-200",
-        };
+  switch (type) {
+    case "withdraw":
+      return {
+        icon: <ArrowUpCircle className="w-5 h-5 text-orange-600" />,
+        bg: "bg-orange-50",
+        border: "border-orange-200",
+      };
 
-      case "payment":
-        return {
-          icon: <ArrowDownCircle className="w-5 h-5 text-emerald-600" />,
-          bg: "bg-emerald-50",
-          border: "border-emerald-200",
-        };
+    case "payment":
+      return {
+        icon: <ArrowDownCircle className="w-5 h-5 text-green-600" />,
+        bg: "bg-green-50",
+        border: "border-green-200",
+      };
 
-      case "ticket":
-        return {
-          icon: <Users className="w-5 h-5 text-purple-600" />,
-          bg: "bg-purple-50",
-          border: "border-purple-200",
-        };
+    case "ticket":
+      return {
+        icon: <Users className="w-5 h-5 text-indigo-600" />,
+        bg: "bg-indigo-50",
+        border: "border-indigo-200",
+      };
 
-      case "referral":
-        return {
-          icon: <Users className="w-5 h-5 text-amber-500" />,
-          bg: "bg-amber-50",
-          border: "border-amber-200",
-        };
+    case "referral":
+      return {
+        icon: <Users className="w-5 h-5 text-yellow-600" />,
+        bg: "bg-yellow-50",
+        border: "border-yellow-200",
+      };
 
-      case "report":
-        return {
-          icon: <Info className="w-5 h-5 text-blue-600" />,
-          bg: "bg-blue-50",
-          border: "border-blue-200",
-        };
+    case "report":
+      return {
+        icon: <Info className="w-5 h-5 text-sky-600" />,
+        bg: "bg-sky-50",
+        border: "border-sky-200",
+      };
 
-      case "other":
-      default:
-        return {
-          icon: <Bell className="w-5 h-5 text-stone-500" />,
-          bg: "bg-stone-100",
-          border: "border-stone-300",
-        };
-    }
-  };
+    case "other":
+    default:
+      return {
+        icon: <Bell className="w-5 h-5 text-gray-600" />,
+        bg: "bg-gray-50",
+        border: "border-gray-200",
+      };
+  }
+};
+
 
   return (
     <div className="absolute right-0 mt-3 w-80 bg-white shadow-xl rounded-xl p-4 border border-stone-200 z-50">

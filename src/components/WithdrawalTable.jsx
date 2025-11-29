@@ -44,7 +44,7 @@ export function WithdrawalTable() {
 
   // Review modal state
   const [selectedStatus, setSelectedStatus] = useState("");
-const [rejectReason, setRejectReason] = useState("");
+  const [rejectReason, setRejectReason] = useState("");
 
   const [selectedId, setSelectedId] = useState(null);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
@@ -65,11 +65,11 @@ const [rejectReason, setRejectReason] = useState("");
   };
 
   React.useEffect(() => {
-  if (selectedWithdraw) {
-    setSelectedStatus(selectedWithdraw.status || "");
-    setRejectReason("");
-  }
-}, [selectedWithdraw]);
+    if (selectedWithdraw) {
+      setSelectedStatus(selectedWithdraw.status || "");
+      setRejectReason("");
+    }
+  }, [selectedWithdraw]);
   // Debounce ID
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -284,11 +284,11 @@ const [rejectReason, setRejectReason] = useState("");
                 }}
               >
                 {[
-                  { label: "Name", key: "name" },
+                  { label: "Withdraw ID", key: "withdrawId" },
+
                   { label: "Email", key: "email" },
                   { label: "Amount", key: "amount" },
                   { label: "Status", key: "status" },
-                  { label: "Withdraw ID", key: "withdrawId" },
                   { label: "Created", key: "createdAt" },
                   { label: "Actions" },
                 ].map((col) => (
@@ -336,7 +336,7 @@ const [rejectReason, setRejectReason] = useState("");
                     style={{ borderBottom: `1px solid ${ADMINCOLORS.border}` }}
                   >
                     <td style={{ padding: 16 }} className="text-white">
-                      {req?.user.name}
+                      {req.withdrawId}
                     </td>
 
                     <td style={{ padding: 16 }} className="text-white">
@@ -363,10 +363,6 @@ const [rejectReason, setRejectReason] = useState("");
                           {req.status}
                         </span>
                       </div>
-                    </td>
-
-                    <td style={{ padding: 16 }} className="text-white">
-                      {req.withdrawId}
                     </td>
 
                     <td style={{ padding: 16, color: ADMINCOLORS.muted }}>
@@ -466,161 +462,156 @@ const [rejectReason, setRejectReason] = useState("");
       </div>
 
       {/* ====================== REVIEW MODAL ====================== */}
-     {/* ====================== REVIEW MODAL ====================== */}
-{isReviewOpen && (
-  <div
-    style={{
-      position: "fixed",
-      inset: 0,
-      background: "rgba(0,0,0,0.6)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 9999,
-    }}
-  >
-    <div
-      style={{
-        width: "450px",
-        background: ADMINCOLORS.card,
-        padding: 24,
-        borderRadius: 12,
-        border: `1px solid ${ADMINCOLORS.border}`,
-      }}
-    >
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold" style={{ color: "white" }}>
-          Review Withdrawal
-        </h2>
-        <button onClick={closeReview}>
-          <X size={20} style={{ color: "white", cursor: "pointer" }} />
-        </button>
-      </div>
-
-      {/* LOADING */}
-      {isLoadingSingle ? (
-        <Loader2 className="w-5 h-5 animate-spin text-white" />
-      ) : !selectedWithdraw ? (
-        <p style={{ color: "white" }}>No data found</p>
-      ) : (
-        <>
-          {/* USER */}
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ color: "#9CA3AF" }}>User</p>
-            <p style={{ color: "white", fontWeight: 600 }}>
-              {selectedWithdraw.requestedBy?.name} (
-              {selectedWithdraw.requestedBy?.email})
-            </p>
-          </div>
-
-          {/* AMOUNT */}
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ color: "#9CA3AF" }}>Amount</p>
-            <p style={{ color: "white", fontWeight: 600 }}>
-              ₹{selectedWithdraw.amount}
-            </p>
-          </div>
-
-          {/* WITHDRAW ID */}
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ color: "#9CA3AF" }}>Withdraw ID</p>
-            <p style={{ color: "white" }}>{selectedWithdraw.withdrawId}</p>
-          </div>
-
-          {/* STATUS SELECT */}
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ color: "#9CA3AF" }}>Status</p>
-
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg"
-              style={{
-                background: ADMINCOLORS.accent,
-                border: `1px solid ${ADMINCOLORS.border}`,
-                color: ADMINCOLORS.foreground,
-              }}
-            >
-              <option value="">Select status</option>
-              {statusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* SHOW REASON INPUT WHEN REJECTED */}
-          {selectedStatus === "rejected" && (
-            <div style={{ marginBottom: 16 }}>
-              <p style={{ color: "#9CA3AF" }}>Reason</p>
-              <textarea
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                placeholder="Enter reason for rejection"
-                rows={4}
-                className="w-full px-3 py-2 rounded-lg"
-                style={{
-                  background: ADMINCOLORS.accent,
-                  border: `1px solid ${ADMINCOLORS.border}`,
-                  color: ADMINCOLORS.foreground,
-                }}
-              />
+      {/* ====================== REVIEW MODAL ====================== */}
+      {isReviewOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              width: "450px",
+              background: ADMINCOLORS.card,
+              padding: 24,
+              borderRadius: 12,
+              border: `1px solid ${ADMINCOLORS.border}`,
+            }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold" style={{ color: "white" }}>
+                Review Withdrawal
+              </h2>
+              <button onClick={closeReview}>
+                <X size={20} style={{ color: "white", cursor: "pointer" }} />
+              </button>
             </div>
-          )}
 
-          {/* UPDATE BUTTON */}
-          <button
-            onClick={() => {
-              if (!selectedStatus) return alert("Select a status first.");
-
-              if (selectedStatus === "rejected" && !rejectReason.trim()) {
-                return alert("Rejection reason is required.");
-              }
-
-              updateStatusMutation.mutate({
-                id: selectedId,
-                status: selectedStatus,
-                note: rejectReason || null,
-              });
-              closeReview();
-            }}
-            className="w-full mt-2 py-2 rounded-lg"
-            style={{
-              background: ADMINCOLORS.primary,
-              color: ADMINCOLORS.sidebar,
-              fontWeight: 600,
-              cursor: "pointer",
-              opacity: updateStatusMutation.isPending ? 0.7 : 1,
-            }}
-            disabled={updateStatusMutation.isPending}
-          >
-            {updateStatusMutation.isPending ? (
-              <Loader2 className="w-5 h-5 animate-spin mx-auto" />
+            {/* LOADING */}
+            {isLoadingSingle ? (
+              <Loader2 className="w-5 h-5 animate-spin text-white" />
+            ) : !selectedWithdraw ? (
+              <p style={{ color: "white" }}>No data found</p>
             ) : (
-              statusButtonLabels[selectedStatus] || "Update Status"
+              <>
+                {/* USER */}
+                  <div style={{ marginBottom: 20 }}>
+                  <div style={{ marginBottom: 6, color: "#9CA3AF" }}>
+                    UPI ID
+                  </div>
+                  <div style={{ color: "white", marginTop: 8 }}>
+                    {selectedWithdraw.upiId}
+                  </div>
+                </div>
+                {/* AMOUNT */}
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ color: "#9CA3AF" }}>Amount</p>
+                  <p style={{ color: "white", fontWeight: 600 }}>
+                    ₹{selectedWithdraw.amount}
+                  </p>
+                </div>
+
+              
+
+                {/* STATUS SELECT */}
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ color: "#9CA3AF" }}>Status</p>
+
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg"
+                    style={{
+                      background: ADMINCOLORS.accent,
+                      border: `1px solid ${ADMINCOLORS.border}`,
+                      color: ADMINCOLORS.foreground,
+                    }}
+                  >
+                    <option value="">Select status</option>
+                    {statusOptions.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* SHOW REASON INPUT WHEN REJECTED */}
+                {selectedStatus === "rejected" && (
+                  <div style={{ marginBottom: 16 }}>
+                    <p style={{ color: "#9CA3AF" }}>Reason</p>
+                    <textarea
+                      value={rejectReason}
+                      onChange={(e) => setRejectReason(e.target.value)}
+                      placeholder="Enter reason for rejection"
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-lg"
+                      style={{
+                        background: ADMINCOLORS.accent,
+                        border: `1px solid ${ADMINCOLORS.border}`,
+                        color: ADMINCOLORS.foreground,
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* UPDATE BUTTON */}
+                <button
+                  onClick={() => {
+                    if (!selectedStatus) return alert("Select a status first.");
+
+                    if (selectedStatus === "rejected" && !rejectReason.trim()) {
+                      return alert("Rejection reason is required.");
+                    }
+
+                    updateStatusMutation.mutate({
+                      id: selectedId,
+                      status: selectedStatus,
+                      note: rejectReason || null,
+                    });
+                    closeReview();
+                  }}
+                  className="w-full mt-2 py-2 rounded-lg"
+                  style={{
+                    background: ADMINCOLORS.primary,
+                    color: ADMINCOLORS.sidebar,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    opacity: updateStatusMutation.isPending ? 0.7 : 1,
+                  }}
+                  disabled={updateStatusMutation.isPending}
+                >
+                  {updateStatusMutation.isPending ? (
+                    <Loader2 className="w-5 h-5 animate-spin mx-auto" />
+                  ) : (
+                    statusButtonLabels[selectedStatus] || "Update Status"
+                  )}
+                </button>
+
+                {/* CLOSE */}
+                <button
+                  onClick={closeReview}
+                  className="w-full mt-4 py-2 rounded-lg"
+                  style={{
+                    background: ADMINCOLORS.accent,
+                    color: ADMINCOLORS.sidebar,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  Close
+                </button>
+              </>
             )}
-          </button>
-
-          {/* CLOSE */}
-          <button
-            onClick={closeReview}
-            className="w-full mt-4 py-2 rounded-lg"
-            style={{
-              background: ADMINCOLORS.accent,
-              color: ADMINCOLORS.sidebar,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Close
-          </button>
-        </>
+          </div>
+        </div>
       )}
-    </div>
-  </div>
-)}
-
     </div>
   );
 }

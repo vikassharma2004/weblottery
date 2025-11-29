@@ -10,12 +10,12 @@ createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <QueryProvider>
       <App />
-         <ToastContainer
-        position="bottom-right"
+      <ToastContainer
+        position="top-right"
         autoClose={2000}
         hideProgressBar={false}
         pauseOnHover
-      theme="colored"
+        theme="colored"
       />
     </QueryProvider>
   </BrowserRouter>

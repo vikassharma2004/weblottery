@@ -5,10 +5,12 @@ import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useRegister } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
+import { useUserStore } from "../../store/AuthStrore";
 const Register = () => {
     const register = useRegister();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const {user}=useUserStore();
   const [referralCode, setReferralCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState({ password: false, confirm: false });
@@ -20,6 +22,11 @@ const Register = () => {
     confirmPassword: "",
   });
 
+    if (user && user.role === "admin") {
+  navigate("/admin/dashboard");
+} else if (user && user.role === "user") {
+  navigate("/dashboard");
+}
   // ✅ Capture referral code from URL
   useEffect(() => {
     const code = searchParams.get("referralCode");

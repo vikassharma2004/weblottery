@@ -4,20 +4,23 @@ import { ADMINCOLORS } from "../constant";
 import AnnouncementCard from "./AnnouncementCard";
 import BannerSection from "./BannerSection";
 
-import { useCreateAnnouncement, useUpdateAnnouncement } from "../hooks/auth/AdminMutation";
+import {
+  useCreateAnnouncement,
+  useUpdateAnnouncement,
+} from "../hooks/auth/AdminMutation";
 
 export default function AnnouncementBuilder({ initialData, onBack }) {
   const isEditing = Boolean(initialData);
 
   const createAnnouncement = useCreateAnnouncement();
-   const updateAnnouncement = useUpdateAnnouncement();
-const createdAt=initialData?.createdAt || new Date().toISOString();
+  const updateAnnouncement = useUpdateAnnouncement();
+  const createdAt = initialData?.createdAt || new Date().toISOString();
   const [title, setTitle] = useState(initialData?.title || "");
   const [message, setMessage] = useState(initialData?.message || "");
   const [type, setType] = useState(initialData?.type || "info");
   const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
 
-  const previewData = { title, message, type, isActive,createdAt };
+  const previewData = { title, message, type, isActive, createdAt };
 
   const handleSubmit = () => {
     const payload = { title, message, type, isActive };
@@ -33,22 +36,22 @@ const createdAt=initialData?.createdAt || new Date().toISOString();
         }
       );
     } else {
-    createAnnouncement.mutate(payload);
-    setTitle("");
-    setMessage("");
-    setType("info");
-    setIsActive(true);
-    onBack();
+      createAnnouncement.mutate(payload);
+      setTitle("");
+      setMessage("");
+      setType("info");
+      setIsActive(true);
+      onBack();
     }
   };
 
   const loading = createAnnouncement.isPending;
 
   return (
-    <div className="flex justify-center gap-4">
+    <div className="flex justify-center gap-4 flex-col md:flex-row">
       {/* LEFT SECTION - FORM */}
       <div
-        className="p-6 rounded-xl max-w-3xl mx-auto w-1/2"
+        className="p-6 rounded-xl max-w-4xl mx-auto md:w-1/2"
         style={{
           background: ADMINCOLORS.card,
           border: `1px solid ${ADMINCOLORS.border}`,
@@ -138,7 +141,7 @@ const createdAt=initialData?.createdAt || new Date().toISOString();
       </div>
 
       {/* RIGHT SECTION — PREVIEW */}
-      <div className="bg-[#1F1F1F] p-6 rounded-xl border border-[#333] mt-6 max-w-3xl mx-auto w-1/2">
+      <div className="bg-[#1F1F1F] p-6 rounded-xl border border-[#333] mt-6 max-w-6xl mx-auto md:w-1/2">
         <h2 className="text-xl font-bold text-white mb-4">Preview</h2>
 
         {previewData.type === "banner" ? (

@@ -9,6 +9,7 @@ import {
   LogOut,
   Bell,
   Megaphone,
+  Monitor,
 } from "lucide-react";
 import { COLORS } from "../../constant";
 import { useState } from "react";
@@ -69,7 +70,7 @@ const { unreadCount } = useNotifications(isLoggedIn);
           {isLoggedIn && user.role != "user" && (
             <DesktopLink
               to="/admin/dashboard"
-              icon={<Home className="w-4 h-4" />}
+              icon={<Monitor className="w-4 h-4" />}
               label="Dashbaord"
             />
           )}

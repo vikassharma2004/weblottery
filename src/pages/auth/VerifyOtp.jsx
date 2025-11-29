@@ -3,16 +3,19 @@ import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import { useGenerateOtp,useVerifyOtp } from "../../hooks/auth/AuthMutation";
+import { useGenerateOtp, useVerifyOtp } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
+import { useUserStore } from "../../store/AuthStrore";
 const VerifyOtp = () => {
   const OTP_LENGTH = 6;
-const { mutateAsync: generateOtp, isPending: isGeneratingOtp } = useGenerateOtp();
-const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
+  const {user}=useUserStore()
+  const { mutateAsync: generateOtp, isPending: isGeneratingOtp } =
+    useGenerateOtp();
+  const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
   // ------ Get Email from Router ------
   const { state } = useLocation();
-  const initialEmail = state?.email || "";         // from login redirect
-  const action = state?.action || "verifyEmail";   // optional
+  const initialEmail = state?.email || ""; // from login redirect
+  const action = state?.action || "verifyEmail"; // optional
 
   const [email, setEmail] = useState(initialEmail); // editable email
 
@@ -21,6 +24,11 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
   const [resendDisabled, setResendDisabled] = useState(true);
   const inputRefs = useRef([]);
 
+    if (user && user.role === "admin") {
+  navigate("/admin/dashboard");
+} else if (user && user.role === "user") {
+  navigate("/dashboard");
+}
   // ---- Timer Logic ----
   useEffect(() => {
     if (!resendDisabled) return;
@@ -59,7 +67,10 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
 
   const handlePaste = (e) => {
     e.preventDefault();
-    const pasteData = e.clipboardData.getData("text").slice(0, OTP_LENGTH).split("");
+    const pasteData = e.clipboardData
+      .getData("text")
+      .slice(0, OTP_LENGTH)
+      .split("");
 
     const newOtp = [...otp];
     pasteData.forEach((digit, i) => {
@@ -70,7 +81,7 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
   };
 
   // ---- Verify OTP ----
-  const handleVerify = async(e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
     const enteredOtp = otp.join("");
 
@@ -84,8 +95,7 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
       return;
     }
 
-    await verifyOtp({ email, otp: enteredOtp, type:action });
-   
+    await verifyOtp({ email, otp: enteredOtp, type: action });
   };
 
   // ---- Resend OTP ----
@@ -97,13 +107,10 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
       return;
     }
 
-    
-    generateOtp({ email, type:action });
+    generateOtp({ email, type: action });
     setOtp(Array(OTP_LENGTH).fill(""));
     setResendDisabled(true);
     setTimeLeft(45);
-
-   
   };
 
   return (
@@ -137,7 +144,10 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
       </div>
 
       {/* ---- OTP Inputs ---- */}
-      <form onSubmit={handleVerify} className="flex flex-col items-center gap-6">
+      <form
+        onSubmit={handleVerify}
+        className="flex flex-col items-center gap-6"
+      >
         <div className="flex justify-center gap-3">
           {otp.map((digit, index) => (
             <input
@@ -168,7 +178,11 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
             color: COLORS.WHITE,
           }}
         >
-        {isVerifyingOtp? <Loader2 className="w-5 h-5 animate-spin"/>: "Verify OTP"}
+          {isVerifyingOtp ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            "Verify OTP"
+          )}
           <ArrowRight className="w-4 h-4" />
         </button>
       </form>
@@ -177,7 +191,8 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
       <div className="text-center text-sm mt-4 select-none">
         {resendDisabled ? (
           <p style={{ color: COLORS.TEXT_SECONDARY }}>
-            Resend OTP in <span style={{ color: COLORS.PRIMARY }}>{timeLeft}s</span>
+            Resend OTP in{" "}
+            <span style={{ color: COLORS.PRIMARY }}>{timeLeft}s</span>
           </p>
         ) : (
           <button
@@ -189,7 +204,7 @@ const { mutate: verifyOtp, isPending: isVerifyingOtp } = useVerifyOtp();
           </button>
         )}
       </div>
-      <FloatingSupportButton/>
+      <FloatingSupportButton />
     </div>
   );
 };

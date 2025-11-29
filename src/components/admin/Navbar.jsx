@@ -1,20 +1,25 @@
-'use client';
+"use client";
 
-import { Menu, Bell, Settings, User, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
-import { ADMINCOLORS } from '../../constant';
-import { useUserStore } from '../../store/AuthStrore';
-import { Link } from 'react-router-dom';
+import { Menu, Bell, Settings, User, ChevronDown, LogOut } from "lucide-react";
+import { useState } from "react";
+import { ADMINCOLORS } from "../../constant";
+import { useUserStore } from "../../store/AuthStrore";
+import { Link } from "react-router-dom";
+import { axiosInstance as axios } from "../../config/axios";
 export default function Navbar({ onMenuClick }) {
-  const {user}=useUserStore()
+  const { user,clearAuth } = useUserStore();
   const [showProfile, setShowProfile] = useState(false);
-
+  const handleLogout=async()=>{
+    // clearAuth();
+    await axios.post("/auth/logout");
+    clearAuth();
+  }
   return (
     <header
       className="h-16 flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 shadow-md"
       style={{
         backgroundColor: ADMINCOLORS.card,
-        borderBottom: `1px solid ${ADMINCOLORS.border}`
+        borderBottom: `1px solid ${ADMINCOLORS.border}`,
       }}
     >
       {/* LEFT */}
@@ -28,7 +33,10 @@ export default function Navbar({ onMenuClick }) {
         </button>
 
         <div>
-          <p className="text-sm font-medium" style={{ color: ADMINCOLORS.primary }}>
+          <p
+            className="text-sm font-medium"
+            style={{ color: ADMINCOLORS.primary }}
+          >
             Hello {user.name}
           </p>
           <p className="text-xs" style={{ color: ADMINCOLORS.muted }}>
@@ -39,20 +47,7 @@ export default function Navbar({ onMenuClick }) {
 
       {/* RIGHT */}
       <div className="flex items-center gap-4">
-
-        {/* Notifications */}
-        <button
-          className="relative p-2 rounded-lg transition-colors  cursor-pointer"
-          style={{ backgroundColor: ADMINCOLORS.sidebarAccent }}
-        >
-          <Bell size={20} style={{ color: ADMINCOLORS.foreground }} className=' cursor-pointer' />
-          <span
-            className="absolute top-1 right-1 w-2 h-2 rounded-full"
-            style={{ backgroundColor: ADMINCOLORS.destructive }}
-          ></span>
-        </button>
-
-     
+       
 
         {/* Profile */}
         <div className="relative">
@@ -65,7 +60,7 @@ export default function Navbar({ onMenuClick }) {
               className="w-8 h-8 rounded-full flex items-center justify-center"
               style={{ backgroundColor: ADMINCOLORS.primary + "33" }}
             >
-              <User size={16} style={{ color: ADMINCOLORS.primary }}  />
+              <User size={16} style={{ color: ADMINCOLORS.primary }} />
             </div>
 
             <ChevronDown
@@ -81,29 +76,55 @@ export default function Navbar({ onMenuClick }) {
               className="absolute right-0 mt-2 w-48 rounded-lg shadow-xl z-50"
               style={{
                 backgroundColor: ADMINCOLORS.sidebarAccent,
-                border: `1px solid ${ADMINCOLORS.border}`
+                border: `1px solid ${ADMINCOLORS.border}`,
               }}
             >
               <div
                 className="p-3 border-b"
                 style={{ borderColor: ADMINCOLORS.border }}
               >
-                <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
+                <p
+                  className="font-medium text-sm"
+                  style={{ color: ADMINCOLORS.foreground }}
+                >
                   Admin User
                 </p>
                 <p className="text-xs" style={{ color: ADMINCOLORS.muted }}>
-                 {user?.email}
+                  {user?.email}
                 </p>
               </div>
-              <Link to={"/profile/change-password"}
-                className="p-4 border-b"
+              <div
+                className="p-3 border-b"
                 style={{ borderColor: ADMINCOLORS.border }}
               >
-                <p className="font-medium text-sm" style={{ color: ADMINCOLORS.foreground }}>
-                  Change password
-                </p>
-               
-              </Link>
+                <Link
+                  to={"/profile/change-password"}
+                  style={{ borderColor: ADMINCOLORS.border }}
+                >
+                  <p
+                    className="font-medium text-sm"
+                    style={{ color: ADMINCOLORS.foreground }}
+                  >
+                    Change password
+                  </p>
+                </Link>
+              </div>
+              <div
+                className="p-3 border-b"
+                style={{ borderColor: ADMINCOLORS.border }}
+              >
+                <button
+                  className="w-full flex items-center gap-3  rounded-lg transition-colors cursor-pointer"
+                  onClick={handleLogout}
+                  style={{
+                    color: ADMINCOLORS.destructive,
+                    backgroundColor: ADMINCOLORS.destructive + "00",
+                  }}
+                >
+                  <LogOut size={20} className="cursor-pointer" />
+                  <span className="text-sm font-medium">Logout</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

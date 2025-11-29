@@ -169,7 +169,7 @@ export const createPaymentSettingApi = async (formData) => {
 export const submitPaymentVerificationApi = async (formData) => {
   const res = await axios.post("/payment-verification/submit", formData, {
     headers: { "Content-Type": "multipart/form-data" },
-  });
+  }); 
 
   return res.data;
 };
