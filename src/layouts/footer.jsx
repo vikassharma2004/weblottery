@@ -52,13 +52,19 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-white">
               Contact Us
             </h3>
-            <p className="text-stone-400 text-sm">support@spinshare.com</p>
+           <a
+  href="mailto:support@spinshare.in"
+  className="text-stone-400 text-sm hover:underline"
+>
+  support@spinshare.in
+</a>
+
           </div>
         </div>
 
         {/* Footer Bottom */}
         <div className="mt-10 border-t border-stone-700 pt-6 text-center text-xs sm:text-sm text-stone-500">
-          © {new Date().getFullYear()} SpinShare — Owned by V code. All rights
+          © {new Date().getFullYear()} SpinShare — Owned by SpinShare code. All rights
           reserved.
         </div>
       </div>

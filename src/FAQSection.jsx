@@ -37,6 +37,11 @@ const FAQ_DATA = [
     answer:
       "You can report issues from the 'Profile' section. If you're unable to log in, use the 'Report Issue' option on the Login screen.",
   },
+  {
+    question: "How can I contact support?",
+    answer:
+      'You can email us anytime at <a href="mailto:support@spinshare.in" class="text-blue-600 underline">support@spinshare.in</a> for direct help.',
+  },
 ];
 
 export default function FAQSection() {
