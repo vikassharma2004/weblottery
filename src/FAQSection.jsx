@@ -37,11 +37,12 @@ const FAQ_DATA = [
     answer:
       "You can report issues from the 'Profile' section. If you're unable to log in, use the 'Report Issue' option on the Login screen.",
   },
-  {
-    question: "How can I contact support?",
-    answer:
-      'You can email us anytime at <a href="mailto:support@spinshare.in" class="text-blue-600 underline">support@spinshare.in</a> for direct help.',
-  },
+ {
+  question: "How can I contact support?",
+  answer:
+    "If you need direct assistance, you can email our support team at support@spinshare.in and we’ll help you as soon as possible.",
+},
+
 ];
 
 export default function FAQSection() {
@@ -61,7 +62,7 @@ export default function FAQSection() {
           >
             <button
               onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-              className="w-full flex justify-between items-center px-5 py-4"
+              className="w-full flex justify-between items-center px-5 py-4 cursor-pointer"
             >
               <span className="text-base sm:text-lg font-semibold text-stone-900 text-left">
                 {item.question}
