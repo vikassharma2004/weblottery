@@ -38,9 +38,12 @@ export const authRoutes = [
   {
     path: "/auth/forgot-password",
     element: (
+      <UserLayout>
       <AuthLayout src={authImages.forgot}>
+        
         <ForgotPassword />
       </AuthLayout>
+      </UserLayout>
     ),
   },
   {

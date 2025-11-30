@@ -7,4 +7,53 @@
 .animate-slideDown {
   animation: slideDown 0.25s ease-out;
 }
+/* All toasts */
+.Toastify__toast {
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* Success */
+.Toastify__toast--success {
+  background: #022c22;
+  color: #6ee7b7;
+  border: 1px solid #16a34a;
+}
+
+/* Error */
+.Toastify__toast--error {
+  background: #3f1515;
+  color: #fecaca;
+  border: 1px solid #b91c1c;
+  padding: 10px 10px;
+}
+
+/* Info */
+.Toastify__toast--info {
+  background: #0b1120;
+  color: #bfdbfe;
+}
+
+/* Warning */
+.Toastify__toast--warning {
+  background: #451a03;
+  color: #fed7aa;
+}
+
+/* Remove scrollbar for Chrome, Safari, Edge */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Remove scrollbar for Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* Prevent scrolling but keep layout stable */
+body {
+  -ms-overflow-style: none;  /* IE & Edge */
+  overflow-y: scroll;        /* Keeps layout from shifting */
+}
+
 

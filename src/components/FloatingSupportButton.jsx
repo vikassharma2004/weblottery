@@ -8,8 +8,8 @@ export default function FloatingSupportButton() {
     <button
       onClick={() => navigate("/support")}
       className="
-        fixed bottom-6 left-6 z-[9999] cursor-pointer animate-bounce
-        w-14 h-14 rounded-full
+        fixed bottom-6 left-6 z-999 cursor-pointer
+        w-10 h-10 rounded-full
         bg-amber-400 hover:bg-amber-500
         shadow-xl flex items-center justify-center
         transition-all duration-200
