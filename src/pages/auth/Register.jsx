@@ -25,7 +25,7 @@ const Register = () => {
     if (user && user.role === "admin") {
   navigate("/admin/dashboard");
 } else if (user && user.role === "user") {
-  navigate("/dashboard");
+  navigate("/refer-earn");
 }
   // ✅ Capture referral code from URL
   useEffect(() => {
