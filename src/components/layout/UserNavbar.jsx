@@ -62,11 +62,7 @@ const { unreadCount } = useNotifications(isLoggedIn);
 
         {/* DESKTOP NAVIGATION */}
         <nav className="hidden md:flex items-center gap-10">
-          <DesktopLink
-            to="/"
-            icon={<Home className="w-4 h-4" />}
-            label="Home"
-          />
+          
           {isLoggedIn && user.role != "user" && (
             <DesktopLink
               to="/admin/dashboard"

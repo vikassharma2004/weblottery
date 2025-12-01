@@ -26,9 +26,12 @@ export const authRoutes = [
   {
     path: "/auth/register",
     element: (
+     
+
       <AuthLayout src={authImages.register}>
         <Register />
       </AuthLayout>
+    
     ),
   },
   {

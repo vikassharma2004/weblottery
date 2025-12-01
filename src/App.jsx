@@ -3,7 +3,6 @@ import RoutesIndex from "./routes/RoutesIndex.jsx";
 import { useUserStore } from "./store/AuthStrore.js";
 import { getProfile, logoutUser } from "./api/AuthApi.js";
 import toast, { Toaster } from "react-hot-toast";
-import OnlineStatus from "./components/onlinestats.jsx";
 import { useVerifyAuthToken } from "./hooks/auth/AuthMutation.js";
 function App() {
   const { hydrated, user, setUser, clearAuth } = useUserStore();
@@ -25,25 +24,36 @@ function App() {
     };
   }, []);
 
-  // 2️⃣ Verify token → load profile
-  useEffect(() => {
-    if (!hydrated) return;
+ useEffect(() => {
+  if (!hydrated) return;
 
+  // CASE 1: user already in store → verify token once
+  if (user) {
     verifyToken(null, {
-      onSuccess: async () => {
-        try {
-          const res = await getProfile();
-          if (res?.user) setUser(res.user);
-        } catch {
-          clearAuth();
-          logoutUser();
-        }
-      },
+      onSuccess: () => {},
       onError: () => {
-        // handled inside the hook (clear + logout)
+        clearAuth();
+        logoutUser();
       }
     });
-  }, [hydrated]);
+    return;
+  }
+
+  // CASE 2: user NOT in store → get profile (this also validates token)
+  (async () => {
+    try {
+      const res = await getProfile();
+      if (res?.user) {
+        setUser(res.user);
+      }
+    } catch {
+      clearAuth();
+      logoutUser();
+    }
+  })();
+
+}, [hydrated]);
+
 
   // 3️⃣ Splash screen
   if (!hydrated) {
