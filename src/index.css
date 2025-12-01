@@ -9,7 +9,7 @@
 }
 /* All toasts */
 .Toastify__toast {
-  border-radius: 10px;
+  border-radius: 20px;
   font-size: 14px;
 }
 
@@ -18,6 +18,7 @@
   background: #022c22;
   color: #6ee7b7;
   border: 1px solid #16a34a;
+  padding: 10px 10px;
 }
 
 /* Error */
@@ -32,12 +33,14 @@
 .Toastify__toast--info {
   background: #0b1120;
   color: #bfdbfe;
+  padding: 10px 10px;
 }
 
 /* Warning */
 .Toastify__toast--warning {
   background: #451a03;
   color: #fed7aa;
+  padding: 10px 10px;
 }
 
 /* Remove scrollbar for Chrome, Safari, Edge */

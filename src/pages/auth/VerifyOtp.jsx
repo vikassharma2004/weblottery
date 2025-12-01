@@ -183,7 +183,7 @@ const VerifyOtp = () => {
           ) : (
             "Verify OTP"
           )}
-          <ArrowRight className="w-4 h-4" />
+         
         </button>
       </form>
 

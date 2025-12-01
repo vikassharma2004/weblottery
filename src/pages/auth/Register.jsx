@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Gift, Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Gift,
+  Eye,
+  EyeOff,
+  Loader2,
+  ArrowRight,
+} from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
 import { COLORS } from "../../constant";
 import { useRegister } from "../../hooks/auth/AuthMutation";
 import FloatingSupportButton from "../../components/FloatingSupportButton";
 import { useUserStore } from "../../store/AuthStrore";
 const Register = () => {
-    const register = useRegister();
+  const register = useRegister();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const {user}=useUserStore();
+  const { user } = useUserStore();
   const [referralCode, setReferralCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState({ password: false, confirm: false });
@@ -22,11 +31,11 @@ const Register = () => {
     confirmPassword: "",
   });
 
-    if (user && user.role === "admin") {
-  navigate("/admin/dashboard");
-} else if (user && user.role === "user") {
-  navigate("/refer-earn");
-}
+  if (user && user.role === "admin") {
+    navigate("/admin/dashboard");
+  } else if (user && user.role === "user") {
+    navigate("/refer-earn");
+  }
   // ✅ Capture referral code from URL
   useEffect(() => {
     const code = searchParams.get("referralCode");
@@ -40,7 +49,12 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
       toast.error("All fields are required!");
       return;
     }
@@ -49,31 +63,30 @@ const Register = () => {
       toast.error("Passwords do not match!");
       return;
     }
-    if(formData.password?.length<6){
+    if (formData.password?.length < 6) {
       toast.error("Password must be at least 6 characters long.");
       return;
     }
 
     setLoading(true);
-   register.mutate(
-    {
-      name: formData.fullName,
-      email: formData.email,
-      password: formData.password,
-      referralCode: referralCode,
-    },
-    {
-       
-      onSuccess: () => {
-        navigate("/auth/verify-otp", {
-          state: { 
-            email: formData?.email,     // backend must return this
-            action: "verifyEmail",
-          },
-        });
+    register.mutate(
+      {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        referralCode: referralCode,
       },
-    }
-  );
+      {
+        onSuccess: () => {
+          navigate("/auth/verify-otp", {
+            state: {
+              email: formData?.email, // backend must return this
+              action: "verifyEmail",
+            },
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -94,7 +107,10 @@ const Register = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.TEXT }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.TEXT }}
+          >
             Full Name
           </label>
           <div className="relative">
@@ -121,7 +137,10 @@ const Register = () => {
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.TEXT }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.TEXT }}
+          >
             Email Address
           </label>
           <div className="relative">
@@ -148,7 +167,10 @@ const Register = () => {
 
         {/* Password */}
         <div>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.TEXT }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.TEXT }}
+          >
             Password
           </label>
           <div className="relative">
@@ -176,9 +198,15 @@ const Register = () => {
               title={show.password ? "Hide Password" : "Show Password"}
             >
               {show.password ? (
-                <EyeOff className="w-5 h-5" style={{ color: COLORS.TEXT_SECONDARY }} />
+                <EyeOff
+                  className="w-5 h-5"
+                  style={{ color: COLORS.TEXT_SECONDARY }}
+                />
               ) : (
-                <Eye className="w-5 h-5" style={{ color: COLORS.TEXT_SECONDARY }} />
+                <Eye
+                  className="w-5 h-5"
+                  style={{ color: COLORS.TEXT_SECONDARY }}
+                />
               )}
             </div>
           </div>
@@ -186,7 +214,10 @@ const Register = () => {
 
         {/* Confirm Password */}
         <div>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.TEXT }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.TEXT }}
+          >
             Confirm Password
           </label>
           <div className="relative">
@@ -214,9 +245,15 @@ const Register = () => {
               title={show.confirm ? "Hide Password" : "Show Password"}
             >
               {show.confirm ? (
-                <EyeOff className="w-5 h-5" style={{ color: COLORS.TEXT_SECONDARY }} />
+                <EyeOff
+                  className="w-5 h-5"
+                  style={{ color: COLORS.TEXT_SECONDARY }}
+                />
               ) : (
-                <Eye className="w-5 h-5" style={{ color: COLORS.TEXT_SECONDARY }} />
+                <Eye
+                  className="w-5 h-5"
+                  style={{ color: COLORS.TEXT_SECONDARY }}
+                />
               )}
             </div>
           </div>
@@ -224,7 +261,10 @@ const Register = () => {
 
         {/* Referral Code */}
         <div>
-          <label className="block text-sm font-medium mb-1" style={{ color: COLORS.TEXT }}>
+          <label
+            className="block text-sm font-medium mb-1"
+            style={{ color: COLORS.TEXT }}
+          >
             Referral Code (optional)
           </label>
           <div className="relative">
@@ -253,7 +293,9 @@ const Register = () => {
           type="submit"
           disabled={loading}
           className={`w-full flex items-center justify-center gap-2 py-3 font-semibold rounded-xl shadow-md transition-all duration-200 ${
-            loading ? "opacity-80 cursor-not-allowed" : "hover:scale-[1.02] cursor-pointer"
+            loading
+              ? "opacity-80 cursor-not-allowed"
+              : "hover:scale-[1.02] cursor-pointer"
           }`}
           style={{
             backgroundImage: COLORS.PRIMARY_GRADIENT,
@@ -264,7 +306,6 @@ const Register = () => {
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
-              Registering...
             </>
           ) : (
             <>
@@ -276,7 +317,10 @@ const Register = () => {
       </form>
 
       {/* ---- Footer ---- */}
-      <p className="text-center text-sm mt-3 select-none" style={{ color: COLORS.TEXT_SECONDARY }}>
+      <p
+        className="text-center text-sm mt-3 select-none"
+        style={{ color: COLORS.TEXT_SECONDARY }}
+      >
         Already have an account?{" "}
         <a
           href="/auth/login"
@@ -296,9 +340,10 @@ const Register = () => {
           color: COLORS.SECONDARY,
         }}
       >
-        🎁 Invite friends & earn <span style={{ color: COLORS.PRIMARY }}>₹50</span> when they join!
+        🎁 Invite friends & earn{" "}
+        <span style={{ color: COLORS.PRIMARY }}>₹50</span> when they join!
       </div>
-       <FloatingSupportButton/>
+      <FloatingSupportButton />
     </div>
   );
 };

@@ -11,8 +11,8 @@ createRoot(document.getElementById("root")).render(
     <QueryProvider>
       <App />
       <ToastContainer
-        position="top-right"
-        autoClose={2000}
+        position="bottom-center"
+        autoClose={1500}
         hideProgressBar={false}
         theme="colored"
       />
