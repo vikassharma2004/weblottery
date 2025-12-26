@@ -24,15 +24,14 @@ export default function UserNavbar() {
   const navigate = useNavigate();
   const { clearAuth, user } = useUserStore();
 
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
   const isLoggedIn = Boolean(user);
-  
-// Only fetch notifications when logged in
-const { unreadCount } = useNotifications(isLoggedIn);
+
+  // Only fetch notifications when logged in
+  const { unreadCount } = useNotifications(isLoggedIn);
 
   const handleLogout = async () => {
     const data = await logoutUser();
@@ -62,7 +61,6 @@ const { unreadCount } = useNotifications(isLoggedIn);
 
         {/* DESKTOP NAVIGATION */}
         <nav className="hidden md:flex items-center gap-10">
-          
           {isLoggedIn && user.role != "user" && (
             <DesktopLink
               to="/admin/dashboard"
@@ -167,7 +165,7 @@ const { unreadCount } = useNotifications(isLoggedIn);
                 </div>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 bg-white border rounded-xl shadow-lg w-44 py-2 text-sm font-medium">
+                  <div className="absolute right-0 mt-5 bg-white border rounded-xl shadow-lg w-44 py-4 text-sm font-medium">
                     <DropdownLink
                       to="/user/profile"
                       label="My Profile"
@@ -183,7 +181,7 @@ const { unreadCount } = useNotifications(isLoggedIn);
                       label="Change Password"
                       onClose={() => setDropdownOpen(false)}
                     />
-
+                
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 flex items-center gap-2 text-red-500 hover:bg-gray-100 cursor-pointer"

@@ -17,26 +17,23 @@ export default function ReferEarnPage() {
   // ⬅️ Fetch referral data from backend
   const { data, isLoading, error } = useReferralSummary();
 
-  if(error?.response?.data?.message=="Session expired"){
-    toast.error("Session expired logging out...")
+  if (error?.response?.data?.message == "Session expired") {
+    toast.error("Session expired logging out...");
     clearAuth();
   }
- if (isLoading) {
-  return (
-    <div className="flex justify-center py-20">
-      <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
-    </div>
-  );
-}
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
+      </div>
+    );
+  }
 
   if (error) {
-  return (
-    <div className="p-10 text-center text-red-600">
-      failed to load data.
-    </div>
-  );
-}
-
+    return (
+      <div className="p-10 text-center text-red-600">failed to load data.</div>
+    );
+  }
 
   // backend response → data.data
   const info = data?.data;
@@ -59,9 +56,8 @@ export default function ReferEarnPage() {
               <Users className="w-5 h-5 text-emerald-700" />
             </div>
             <span className="text-base md:text-lg font-semibold text-emerald-700 text-center whitespace-nowrap">
-              Till now, <span className="font-bold">{info.totalUsers
-}</span> + have trusted
-              us
+              Till now, <span className="font-bold">{info.totalUsers}</span> +
+              have trusted us
             </span>
           </div>
         </div>
@@ -131,16 +127,42 @@ export default function ReferEarnPage() {
             {/* Buttons */}
             <div className="flex flex-col gap-3 pt-4">
               {info.hasPaid ? (
-                <button  onClick={handleCopy}   className="h-12 bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-stone-900 font-semibold text-base rounded-lg shadow-md flex items-center justify-center transition-all">
-                  Refer a Friend
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </button>
+                <>
+                  <button
+                    onClick={handleCopy}
+                    className="h-12  cursor-pointer bg-linear-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-stone-900 font-semibold text-base rounded-lg shadow-md flex items-center justify-center transition-all"
+                  >
+                    Refer a Friend
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </button>
+
+                  <button
+                    onClick={() => setOpenPaymentModal(true)}
+                    className="
+    
+    py-3 px-2
+    rounded-xl
+    flex items-center justify-center gap-2
+    bg-gradient-to-r from-yellow-400 to-amber-500
+    text-black font-semibold text-base
+    shadow-md
+    hover:from-yellow-500 hover:to-amber-600
+    hover:shadow-lg
+    active:scale-[0.98]
+    transition-all duration-200 ease-in-out
+    focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2
+    cursor-pointer
+  "
+                  >
+                    🎟️ Purchase Ticket
+                  </button>
+                </>
               ) : (
                 <button
                   onClick={() => setOpenPaymentModal(true)}
                   className="h-12 bg-green-500 text-black-500 font-semibold text-base rounded-lg cursor-pointer"
                 >
-                  Make Payment to Unlock Referrals
+                  purchase ticket to Unlock Referrals
                 </button>
               )}
             </div>
